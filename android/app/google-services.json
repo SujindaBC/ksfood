@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "509171996091",
+    "firebase_url": "https://ksfood-a112c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ksfood-a112c",
+    "storage_bucket": "ksfood-a112c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509171996091:android:e6f8c2e36c3bb2c072a09e",
+        "android_client_info": {
+          "package_name": "com.sujindaboonchuay.ksfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509171996091-1i5fhu88k8e35d2269ecd9jchdv7t13r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZUAcPGosRrB28qd3zKq60EUGcOJMEOdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509171996091-1i5fhu88k8e35d2269ecd9jchdv7t13r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "509171996091-6auq6a2948k9p0qg26lof6cu8a189m0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ksfood.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509171996091:android:a62d452a15d0fd8f72a09e",
+        "android_client_info": {
+          "package_name": "com.sujindaboonchuay.ksfood_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509171996091-ees649522skmetbq27hddc4j7emh9ku2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sujindaboonchuay.ksfood_user",
+            "certificate_hash": "1c79b3e8c6c7124e2eabd93b7892a8ea997c0364"
+          }
+        },
+        {
+          "client_id": "509171996091-1i5fhu88k8e35d2269ecd9jchdv7t13r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZUAcPGosRrB28qd3zKq60EUGcOJMEOdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509171996091-1i5fhu88k8e35d2269ecd9jchdv7t13r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "509171996091-6auq6a2948k9p0qg26lof6cu8a189m0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ksfood.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
