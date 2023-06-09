@@ -12,54 +12,56 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc({
     required this.authRepository,
   }) : super(AppState.initial()) {
-    on<RequestVerificationCode>((event, emit) {
-      emit(
-        state.copyWith(
-          appStatus: AppStatus.loading,
-        ),
-      );
-      try {
-        authRepository.verifyPhoneNumber(
-          phoneNumber: event.phoneNumber,
-          verificationCompleted: (PhoneAuthCredential verificationCompleted) {
-            emit(
-              state.copyWith(
-                appStatus: AppStatus.completed,
-                authStatus: AuthStatus.authenticated,
-              ),
-            );
-          },
-          verificationFailed: (FirebaseAuthException verificationFailed) {
-            emit(
-              state.copyWith(
-                appStatus: AppStatus.failed,
-                authError: AuthError.from(verificationFailed),
-              ),
-            );
-          },
-          codeSent: (String verificationId, int? codeSent) {
-            emit(
-              state.copyWith(
-                appStatus: AppStatus.completed,
-              ),
-            );
-          },
-          timeout: const Duration(seconds: 120),
-          codeAutoRetrievalTimeout: (String codeAutoRetrievalTimeout) {},
-        );
+    on<RequestVerificationCode>(
+      (event, emit) {
         emit(
           state.copyWith(
-            appStatus: AppStatus.completed,
+            appStatus: AppStatus.loading,
           ),
         );
-      } on FirebaseAuthException catch (e) {
-        emit(
-          state.copyWith(
-            appStatus: AppStatus.failed,
-            authError: AuthError.from(e),
-          ),
-        );
-      }
-    });
+        try {
+          authRepository.verifyPhoneNumber(
+            phoneNumber: event.phoneNumber,
+            verificationCompleted: (PhoneAuthCredential verificationCompleted) {
+              emit(
+                state.copyWith(
+                  appStatus: AppStatus.completed,
+                  authStatus: AuthStatus.authenticated,
+                ),
+              );
+            },
+            verificationFailed: (FirebaseAuthException verificationFailed) {
+              emit(
+                state.copyWith(
+                  appStatus: AppStatus.failed,
+                  authError: AuthError.from(verificationFailed),
+                ),
+              );
+            },
+            codeSent: (String verificationId, int? codeSent) {
+              emit(
+                state.copyWith(
+                  appStatus: AppStatus.completed,
+                ),
+              );
+            },
+            timeout: const Duration(seconds: 120),
+            codeAutoRetrievalTimeout: (String codeAutoRetrievalTimeout) {},
+          );
+          emit(
+            state.copyWith(
+              appStatus: AppStatus.completed,
+            ),
+          );
+        } on FirebaseAuthException catch (e) {
+          emit(
+            state.copyWith(
+              appStatus: AppStatus.failed,
+              authError: AuthError.from(e),
+            ),
+          );
+        }
+      },
+    );
   }
 }

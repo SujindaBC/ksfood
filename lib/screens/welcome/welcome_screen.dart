@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ksfood/auth/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/loading/loading_screen.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
 
@@ -32,6 +33,11 @@ class WelcomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(state.appStatus.name),
+                    BlocConsumer<AuthBloc, AuthState>(
+                      builder: (context, state) =>
+                          Text(state.user?.uid ?? "Null"),
+                      listener: (context, state) {},
+                    ),
                     const Spacer(),
                     FilledButton(
                       style: ButtonStyle(

@@ -170,7 +170,9 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     // Resend OTP Button
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                       child: const Text(
                         'Resend OTP',
                         style: TextStyle(

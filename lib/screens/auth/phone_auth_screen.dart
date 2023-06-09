@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/app_bloc/app_bloc.dart';
+import 'package:ksfood/auth/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/auth/auth_error.dart';
 import 'package:ksfood/helpers/format_phonenumber.dart';
 import 'package:ksfood/loading/loading_screen.dart';
+import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/widgets/request_otp_button.dart';
 
@@ -22,10 +24,13 @@ class PhoneAuthScreen extends StatefulWidget {
 }
 
 class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
+  final AuthRepository authRepository = AuthRepository(
+    firebaseAuth: FirebaseAuth.instance,
+  );
   late final TextEditingController _phoneController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final Duration _timeOut = const Duration(seconds: 120);
+  final Duration _timeOut = const Duration(seconds: 30);
 
   @override
   void initState() {
@@ -39,9 +44,15 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
     super.dispose();
   }
 
-  verificationCompleted(AuthCredential credential) async {
+  verificationCompleted(BuildContext context, AuthCredential credential) async {
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      AuthBloc(authRepository: authRepository).add(
+        AuthEventChanged(
+          user: userCredential.user,
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       developer.log("message");
       debugPrint(e.toString());
@@ -77,7 +88,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   }
 
   codeAutoRetrievalTimeout(String codeAutoRetrievalTimeout) {
-    debugPrint(codeAutoRetrievalTimeout);
+    debugPrint("This error: $codeAutoRetrievalTimeout");
+    Navigator.of(context).pop();
     showDialog(
       context: context,
       builder: (context) {
@@ -175,10 +187,16 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                             phoneNumberController: _phoneController,
                             onRequestOTPTapped: (String phoneNumber) {
                               if (_formKey.currentState!.validate()) {
-                                FirebaseAuth.instance.verifyPhoneNumber(
+                                authRepository.verifyPhoneNumber(
                                   phoneNumber: formatPhoneNumber(
                                       _phoneController.text.trim()),
-                                  verificationCompleted: verificationCompleted,
+                                  verificationCompleted:
+                                      (PhoneAuthCredential credential) {
+                                    verificationCompleted(
+                                      context,
+                                      credential,
+                                    );
+                                  },
                                   verificationFailed:
                                       (FirebaseAuthException exception) {
                                     verificationFailed(context, exception);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ksfood/loading/loading_screen.dart';
 
 typedef RequestOTPTapped = void Function(
   String phoneNumber,
@@ -18,6 +19,8 @@ class RequestOTPButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
+        FocusScope.of(context).unfocus();
+        LoadingScreen.instance().show(context: context, text: "Sending...");
         onRequestOTPTapped(
           phoneNumberController.text,
         );

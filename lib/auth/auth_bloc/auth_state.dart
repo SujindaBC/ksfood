@@ -1,35 +1,46 @@
 part of 'auth_bloc.dart';
 
-abstract class AuthState extends Equatable {
+class AuthState extends Equatable {
   const AuthState({
     required this.isLoading,
+    required this.status,
+    this.user,
     this.authError,
   });
 
   final bool isLoading;
+  final AuthStatus status;
+  final User? user;
   final AuthError? authError;
 
+  factory AuthState.initial() {
+    return const AuthState(
+      isLoading: false,
+      status: AuthStatus.unauthenticated,
+    );
+  }
+
   @override
-  List<Object?> get props => [isLoading, authError];
+  List<Object?> get props => [isLoading, user, authError];
+
+  AuthState copyWith(
+    AuthState authState, {
+    bool? isLoading,
+    AuthStatus? status,
+    User? user,
+    AuthError? authError,
+  }) {
+    return AuthState(
+      isLoading: isLoading ?? this.isLoading,
+      status: status ?? this.status,
+      user: user ?? this.user,
+      authError: authError ?? this.authError,
+    );
+  }
 }
 
-class AuthUninitialized extends AuthState {
-  const AuthUninitialized({
-    required bool isLoading,
-    AuthError? authError,
-  }) : super(isLoading: false);
-}
-
-class Autholized extends AuthState {
-  const Autholized({
-    required bool isLoading,
-    AuthError? authError,
-  }) : super(isLoading: false);
-}
-
-class UnAutholized extends AuthState {
-  const UnAutholized({
-    required bool isLoading,
-    AuthError? authError,
-  }) : super(isLoading: false);
+enum AuthStatus {
+  unauthenticated,
+  authenticated,
+  unknown,
 }

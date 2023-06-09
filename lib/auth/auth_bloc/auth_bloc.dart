@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,27 +10,43 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  late final StreamSubscription authStramSubscription;
   final AuthRepository authRepository;
   AuthBloc({
     required this.authRepository,
-  }) : super(const AuthUninitialized(isLoading: false)) {
-    on<AutholizedEvent>(
+  }) : super(AuthState.initial()) {
+    on<AuthEventChanged>(
       (event, emit) {
+        authStramSubscription = authRepository.user.listen((User? user) {
+          add(AuthEventChanged(user: user));
+        });
         emit(
-          const AuthUninitialized(
-            isLoading: true,
+          state.copyWith(
+            const AuthState(
+              isLoading: true,
+              status: AuthStatus.unauthenticated,
+              user: null,
+            ),
           ),
         );
-        try {
-          authRepository.signInWithVerificationCode(
-            verificationId: event.verificationId,
-            verificationCode: event.verificationCode,
-          );
-        } on FirebaseAuthException catch (e) {
+        if (event.user != null) {
           emit(
-            UnAutholized(
-              authError: AuthError.from(e),
-              isLoading: false,
+            state.copyWith(
+              AuthState(
+                isLoading: false,
+                status: AuthStatus.authenticated,
+                user: event.user,
+              ),
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              const AuthState(
+                isLoading: false,
+                status: AuthStatus.unauthenticated,
+                user: null,
+              ),
             ),
           );
         }

@@ -7,6 +7,8 @@ abstract class SigninEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class GetStert extends SigninEvent {}
+
 class CodeSentEvent extends SigninEvent {}
 
 class TimeOut extends SigninEvent {}
