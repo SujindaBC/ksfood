@@ -7,7 +7,6 @@ import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
 import 'package:ksfood/screens/main/main_screen.dart';
-import 'package:ksfood/screens/welcome/welcome_screen.dart';
 import 'auth/auth_bloc/auth_bloc.dart';
 import 'firebase_options.dart';
 
@@ -57,14 +56,11 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: const WelcomeScreen(),
-          initialRoute: WelcomeScreen.routeName,
+          initialRoute: MainScreen.routeName,
           routes: {
             PhoneAuthScreen.routeName: (BuildContext context) =>
                 const PhoneAuthScreen(),
             OTPScreen.routeName: (BuildContext context) => const OTPScreen(),
-            WelcomeScreen.routeName: (BuildContext context) =>
-                const WelcomeScreen(),
             MainScreen.routeName: (BuildContext context) => const MainScreen(),
           },
         ),

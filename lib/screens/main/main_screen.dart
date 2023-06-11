@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/loading/loading_screen.dart';
+import 'package:ksfood/screens/main/widgets/ks_drawer.dart';
 
 import '../../auth/auth_bloc/auth_bloc.dart';
 
@@ -13,6 +14,10 @@ class MainScreen extends StatelessWidget {
     LoadingScreen.instance().hide();
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          actions: const [],
+        ),
+        drawer: const AppDrawer(),
         body: Center(
           child: Column(
             children: [

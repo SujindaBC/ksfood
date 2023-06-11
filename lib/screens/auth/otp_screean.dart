@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/loading/loading_screen.dart';
-import 'package:ksfood/repositories/auth_repository.dart';
-import 'package:ksfood/screens/main/main_screen.dart';
 
 class OTPScreen extends StatefulWidget {
   static const routeName = '/otp';
@@ -34,7 +31,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final String verificationId = arguments['verificationId'] as String;
+    // final String verificationId = arguments['verificationId'] as String;
     final Duration duration = arguments['duration'] as Duration;
 
     LoadingScreen.instance().hide();
@@ -110,40 +107,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xFF5DB329)),
                       ),
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        try {
-                          LoadingScreen.instance().show(
-                            context: context,
-                            text: 'Verifying OTP...',
-                          );
-                          context
-                              .read<AuthRepository>()
-                              .signInWithVerificationCode(
-                                  verificationId: verificationId,
-                                  verificationCode: _otpController.text.trim())
-                              .then(
-                            (value) {
-                              if (value.user != null) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  MainScreen.routeName,
-                                  (route) => false,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(
-                                      'Login Successful with ${value.user!.phoneNumber}'),
-                                  backgroundColor: Colors.green,
-                                ));
-                              }
-                            },
-                          );
-                        } catch (e) {
-                          LoadingScreen.instance().hide();
-                          debugPrint(e.toString());
-                        }
-                      },
+                      onPressed: () {},
                       child: const SizedBox(
                         width: double.infinity,
                         child: Center(
