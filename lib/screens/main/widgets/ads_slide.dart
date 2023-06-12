@@ -13,7 +13,7 @@ class AdsSlide extends StatelessWidget {
         child: ImageSlideshow(
           initialPage: 0,
           indicatorColor: Theme.of(context).primaryColor,
-          autoPlayInterval: 7500,
+          autoPlayInterval: 7000,
           isLoop: true,
           children: [
             Image.network(
