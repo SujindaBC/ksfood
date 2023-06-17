@@ -7,6 +7,7 @@ import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
 import 'package:ksfood/screens/main/main_screen.dart';
+import 'package:ksfood/screens/merchant/merchant_screen.dart';
 import 'auth/auth_bloc/auth_bloc.dart';
 import 'firebase_options.dart';
 
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'KS Food',
           theme: ThemeData(
+            fontFamily: "Noto Sans Thai",
             primaryColor: const Color(
               0xFF5DB329,
             ),
@@ -62,6 +64,8 @@ class MyApp extends StatelessWidget {
                 const PhoneAuthScreen(),
             OTPScreen.routeName: (BuildContext context) => const OTPScreen(),
             MainScreen.routeName: (BuildContext context) => const MainScreen(),
+            MerchantScreen.routeName: (BuildContext context) =>
+                const MerchantScreen(),
           },
         ),
       ),

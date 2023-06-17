@@ -44,6 +44,7 @@ dependencies:
   dynamic_color: ^1.6.5
   flutter_image_slideshow: ^0.1.5
   carousel_slider: ^4.2.1
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -95,5 +96,17 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Noto Sans Thai
+      fonts:
+        - asset: lib/google_fonts/NotoSansThai-Black.ttf
+        - asset: lib/google_fonts/NotoSansThai-Bold.ttf
+        - asset: lib/google_fonts/NotoSansThai-ExtraBold.ttf
+        - asset: lib/google_fonts/NotoSansThai-ExtraLight.ttf
+        - asset: lib/google_fonts/NotoSansThai-Light.ttf
+        - asset: lib/google_fonts/NotoSansThai-Medium.ttf
+        - asset: lib/google_fonts/NotoSansThai-Regular.ttf
+        - asset: lib/google_fonts/NotoSansThai-SemiBold.ttf
+        - asset: lib/google_fonts/NotoSansThai-Thin.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

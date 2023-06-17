@@ -62,8 +62,11 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   verificationFailed(BuildContext context, FirebaseAuthException exception) {
     final error = AuthError.from(exception);
     LoadingScreen.instance().hide();
-    developer
-        .log("logging from line 46, on phone auth screen ${exception.code}");
+    developer.log(
+      exception.code,
+      time: DateTime.now(),
+      stackTrace: exception.stackTrace,
+    );
     debugPrint(exception.toString());
     showDialog(
       context: context,
