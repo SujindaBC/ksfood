@@ -4,6 +4,7 @@ import 'package:ksfood/screens/main/widgets/ads_slide.dart';
 import 'package:ksfood/screens/main/widgets/automated_slide_card.dart';
 import 'package:ksfood/screens/main/widgets/ks_drawer.dart';
 import 'package:ksfood/screens/main/widgets/nearby_merchants.dart';
+import 'package:ksfood/widgets/appbar_action_cart_button.dart';
 
 class MainScreen extends StatelessWidget {
   static const routeName = '/main';
@@ -15,7 +16,9 @@ class MainScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          actions: const [],
+          actions: const [
+            AppBarActionCartButton(),
+          ],
         ),
         drawer: const AppDrawer(),
         body: const SingleChildScrollView(

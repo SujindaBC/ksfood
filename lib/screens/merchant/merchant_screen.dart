@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/screens/merchant/widgets/products_list.dart';
+import 'package:ksfood/widgets/appbar_action_cart_button.dart';
 
 class MerchantScreen extends StatelessWidget {
   static const routeName = '/merchant';
@@ -13,7 +14,11 @@ class MerchantScreen extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>);
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          actions: const [
+            AppBarActionCartButton(),
+          ],
+        ),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

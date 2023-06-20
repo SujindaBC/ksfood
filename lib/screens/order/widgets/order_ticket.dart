@@ -43,7 +43,7 @@ class OrderTicket extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                Text(
+                const Text(
                   'Items',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -54,8 +54,8 @@ class OrderTicket extends StatelessWidget {
                 _buildOrderItem('Product 1', 2, 9.99),
                 _buildOrderItem('Product 2', 1, 19.99),
                 const SizedBox(height: 16.0),
-                Text(
-                  'Total: \.97',
+                const Text(
+                  'Total: \$.97',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
