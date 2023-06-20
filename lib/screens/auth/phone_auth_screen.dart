@@ -10,7 +10,7 @@ import 'package:ksfood/helpers/format_phonenumber.dart';
 import 'package:ksfood/loading/loading_screen.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
-import 'package:ksfood/widgets/request_otp_button.dart';
+import 'package:ksfood/screens/auth/widgets/request_otp_button.dart';
 
 import '../../helpers/phonenumber_formatter.dart';
 

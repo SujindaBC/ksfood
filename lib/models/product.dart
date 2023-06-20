@@ -1,7 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 
 class Product {
   const Product({
@@ -88,33 +85,5 @@ class Product {
   @override
   String toString() {
     return 'Product(id: $id, name: $name, description: $description, imageUrl: $imageUrl, isAvailable: $isAvailable, merchantId: $merchantId, price: $price, rating: $rating, category: $category)';
-  }
-
-  @override
-  bool operator ==(covariant Product other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.name == name &&
-        other.description == description &&
-        other.imageUrl == imageUrl &&
-        other.isAvailable == isAvailable &&
-        other.merchantId == merchantId &&
-        other.price == price &&
-        other.rating == rating &&
-        listEquals(other.category, category);
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        description.hashCode ^
-        imageUrl.hashCode ^
-        isAvailable.hashCode ^
-        merchantId.hashCode ^
-        price.hashCode ^
-        rating.hashCode ^
-        category.hashCode;
   }
 }

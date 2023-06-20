@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class Merchant {
@@ -61,25 +60,5 @@ class Merchant {
   @override
   String toString() {
     return 'Merchant(id: $id, name: $name, description: $description, image: $image, rating: $rating)';
-  }
-
-  @override
-  bool operator ==(covariant Merchant other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.name == name &&
-        other.description == description &&
-        other.image == image &&
-        other.rating == rating;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        description.hashCode ^
-        image.hashCode ^
-        rating.hashCode;
   }
 }

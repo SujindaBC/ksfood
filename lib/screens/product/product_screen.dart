@@ -1,0 +1,177 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/models/product.dart';
+import 'package:ksfood/screens/merchant/widgets/quantity_button.dart';
+
+class ProductScreen extends StatelessWidget {
+  static const routeName = '/product';
+  const ProductScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, dynamic>? arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (arguments == null) {
+      // Handle case where arguments are null or invalid
+      // For example, redirect to an error screen or display an error message
+      return const SafeArea(
+        child: Scaffold(
+          body: Center(
+            child: Text('Invalid arguments'),
+          ),
+        ),
+      );
+    }
+
+    final String merchantId = arguments['merchantId'];
+    final Product product =
+        Product.fromMap(arguments['product'] as Map<String, dynamic>);
+    final CartBloc cartBloc = context.read<CartBloc>();
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(),
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: AspectRatio(
+                      aspectRatio: 3 / 2,
+                      child: Image.network(
+                        product.imageUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return const Icon(Icons.error);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    product.name,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RatingBarIndicator(
+                        rating: 2.75,
+                        itemBuilder: (context, index) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 14.0,
+                        direction: Axis.horizontal,
+                      ),
+                      const SizedBox(width: 8.0),
+                      Text(
+                        "(${product.rating.toStringAsFixed(1)})",
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                const Divider(
+                  indent: 12.0,
+                  endIndent: 12.0,
+                ),
+                const SizedBox(height: 8.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.0),
+                  child: QuantityButton(),
+                )
+              ],
+            ),
+          ),
+          bottomSheet: BottomSheet(
+            enableDrag: false,
+            onClosing: () {},
+            builder: (context) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: FilledButton(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        cartBloc.add(
+                          AddProductToCart(
+                            merchantId: merchantId.toString().trim(),
+                            product: product,
+                            quantity: 1,
+                            comment: "",
+                          ),
+                        );
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF5DB329),
+                        ),
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Center(
+                          child: Text(
+                            "Add to cart",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
+          )),
+    );
+  }
+}

@@ -10,7 +10,10 @@ class AutomatedSlideCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("merchants").snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("merchants")
+            .where("isAvailable", isEqualTo: true)
+            .snapshots(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case (ConnectionState.active):

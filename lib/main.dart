@@ -3,11 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/app_bloc/app_bloc.dart';
+import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
 import 'package:ksfood/screens/main/main_screen.dart';
 import 'package:ksfood/screens/merchant/merchant_screen.dart';
+import 'package:ksfood/screens/product/product_screen.dart';
 import 'auth/auth_bloc/auth_bloc.dart';
 import 'firebase_options.dart';
 
@@ -45,6 +47,9 @@ class MyApp extends StatelessWidget {
               authRepository: context.read<AuthRepository>(),
             ),
           ),
+          BlocProvider<CartBloc>(
+            create: (context) => CartBloc(),
+          ),
         ],
         child: MaterialApp(
           title: 'KS Food',
@@ -66,6 +71,7 @@ class MyApp extends StatelessWidget {
             MainScreen.routeName: (BuildContext context) => const MainScreen(),
             MerchantScreen.routeName: (BuildContext context) =>
                 const MerchantScreen(),
+            ProductScreen.routeName: (context) => const ProductScreen(),
           },
         ),
       ),
