@@ -13,10 +13,9 @@ class ProceedToPaymentButton extends StatelessWidget {
     // Navigate to the appropriate payment method screen based on the selected payment method
     switch (paymentMethod) {
       case PaymentMethod.promptPay:
-        Navigator.pushNamed(
-          context,
-          PromptPayScreen.routeName,
-        );
+        Navigator.pushNamed(context, PromptPayScreen.routeName, arguments: {
+          "": "sdsds",
+        });
         break;
       case PaymentMethod.mobileBankingKBank:
         Navigator.pushNamed(

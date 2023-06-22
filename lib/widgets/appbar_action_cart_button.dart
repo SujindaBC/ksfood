@@ -12,13 +12,16 @@ class AppBarActionCartButton extends StatelessWidget {
       builder: (context, state) {
         return Badge(
           label: Text(
-            state.items!.length.toString(),
+            state.carts!.length.toString(),
           ),
-          isLabelVisible: state.items!.isNotEmpty,
+          isLabelVisible: state.carts!.isNotEmpty,
           offset: const Offset(-5, 5),
           child: IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, CartScreen.routeName);
+              Navigator.pushNamed(
+                context,
+                CartScreen.routeName,
+              );
             },
             icon: const Icon(
               Icons.shopping_bag_outlined,

@@ -2,14 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:ksfood/app_bloc/app_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
+import 'package:ksfood/screens/cart/cart_screen.dart';
 import 'package:ksfood/screens/main/main_screen.dart';
 import 'package:ksfood/screens/merchant/merchant_screen.dart';
 import 'package:ksfood/screens/product/product_screen.dart';
+import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
 import 'auth/auth_bloc/auth_bloc.dart';
 import 'firebase_options.dart';
 
@@ -18,6 +22,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // Using FlutterDownloader for Promptpay QR download
+  await FlutterDownloader.initialize(
+    debug: true,
   );
   runApp(const MyApp());
 }
@@ -50,6 +58,9 @@ class MyApp extends StatelessWidget {
           BlocProvider<CartBloc>(
             create: (context) => CartBloc(),
           ),
+          BlocProvider<PaymentBloc>(
+            create: (context) => PaymentBloc(),
+          ),
         ],
         child: MaterialApp(
           title: 'KS Food',
@@ -72,6 +83,8 @@ class MyApp extends StatelessWidget {
             MerchantScreen.routeName: (BuildContext context) =>
                 const MerchantScreen(),
             ProductScreen.routeName: (context) => const ProductScreen(),
+            CartScreen.routeName: (context) => const CartScreen(),
+            PromptPayScreen.routeName: (context) => const PromptPayScreen()
           },
         ),
       ),

@@ -2,12 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/models/product.dart';
 import 'package:ksfood/screens/merchant/widgets/quantity_button.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   static const routeName = '/product';
   const ProductScreen({super.key});
+
+  @override
+  State<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  int quantity = 1;
+
+  void getQuantityFromQuantityButton(int newQuantityValue) {
+    setState(() {
+      quantity = newQuantityValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +40,7 @@ class ProductScreen extends StatelessWidget {
       );
     }
 
-    final String merchantId = arguments['merchantId'];
+    final Merchant merchant = arguments['merchant'] as Merchant;
     final Product product =
         Product.fromMap(arguments['product'] as Map<String, dynamic>);
     final CartBloc cartBloc = context.read<CartBloc>();
@@ -115,9 +129,11 @@ class ProductScreen extends StatelessWidget {
                   endIndent: 12.0,
                 ),
                 const SizedBox(height: 8.0),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0),
-                  child: QuantityButton(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: QuantityButton(
+                    onQuantityChanged: getQuantityFromQuantityButton,
+                  ),
                 )
               ],
             ),
@@ -136,10 +152,10 @@ class ProductScreen extends StatelessWidget {
                         FocusScope.of(context).unfocus();
                         cartBloc.add(
                           AddProductToCart(
-                            merchantId: merchantId.toString().trim(),
+                            merchant: merchant,
                             product: product,
-                            quantity: 1,
-                            comment: "",
+                            quantity: quantity,
+                            note: "",
                           ),
                         );
                         Navigator.pop(context);

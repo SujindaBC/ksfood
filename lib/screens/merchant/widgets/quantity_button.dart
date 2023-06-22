@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class QuantityButton extends StatefulWidget {
-  const QuantityButton({super.key});
+  const QuantityButton({super.key, required this.onQuantityChanged});
+
+  final ValueChanged<int> onQuantityChanged;
 
   @override
   State<QuantityButton> createState() => _QuantityButtonState();
@@ -13,6 +15,7 @@ class _QuantityButtonState extends State<QuantityButton> {
   void increment() {
     setState(() {
       quantity++;
+      widget.onQuantityChanged(quantity);
     });
   }
 
@@ -20,6 +23,7 @@ class _QuantityButtonState extends State<QuantityButton> {
     setState(() {
       if (quantity > 1) {
         quantity--;
+        widget.onQuantityChanged(quantity);
       }
     });
   }

@@ -4,9 +4,22 @@ import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/screens/merchant/widgets/products_list.dart';
 import 'package:ksfood/widgets/appbar_action_cart_button.dart';
 
-class MerchantScreen extends StatelessWidget {
+class MerchantScreen extends StatefulWidget {
   static const routeName = '/merchant';
   const MerchantScreen({super.key});
+
+  @override
+  State<MerchantScreen> createState() => _MerchantScreenState();
+}
+
+class _MerchantScreenState extends State<MerchantScreen> {
+  int quantity = 1;
+
+  void retrieveQuantityFromQuantityButton(int newQuantityValue) {
+    setState(() {
+      quantity = newQuantityValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +113,7 @@ class MerchantScreen extends StatelessWidget {
                 endIndent: 12.0,
               ),
               const SizedBox(height: 8.0),
-              ProductsList(merchantId: merchant.id)
+              ProductsList(merchant: merchant)
             ],
           ),
         ),

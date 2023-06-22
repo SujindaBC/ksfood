@@ -2,18 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/models/product.dart';
 import 'package:ksfood/screens/product/product_screen.dart';
 
 class ProductListTile extends StatelessWidget {
   const ProductListTile({
     super.key,
-    required this.merchantId,
+    required this.merchant,
     required this.product,
     this.note,
   });
 
-  final String merchantId;
+  final Merchant merchant;
   final Product product;
   final String? note;
 
@@ -28,7 +29,7 @@ class ProductListTile extends StatelessWidget {
               context,
               ProductScreen.routeName,
               arguments: {
-                "merchantId": merchantId.toString().trim(),
+                "merchant": merchant,
                 "product": product.toMap(),
               },
             );
@@ -86,10 +87,10 @@ class ProductListTile extends StatelessWidget {
                   onPressed: () {
                     cartBloc.add(
                       AddProductToCart(
-                        merchantId: merchantId,
+                        merchant: merchant,
                         product: product,
                         quantity: 1,
-                        comment: note ?? "",
+                        note: note ?? "",
                       ),
                     );
                   },

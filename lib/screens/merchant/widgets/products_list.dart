@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/models/product.dart';
 import 'package:ksfood/screens/product/product_screen.dart';
 
 class ProductsList extends StatelessWidget {
-  const ProductsList({super.key, required this.merchantId});
+  const ProductsList({
+    super.key,
+    required this.merchant,
+  });
 
-  final String merchantId;
+  final Merchant merchant;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class ProductsList extends StatelessWidget {
       stream: FirebaseFirestore.instance
           .collection("menu")
           .where("isAvailable", isEqualTo: true)
-          .where("merchantId", isEqualTo: merchantId)
+          .where("merchantId", isEqualTo: merchant.id)
           .snapshots(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
@@ -51,7 +55,7 @@ class ProductsList extends StatelessWidget {
                           context,
                           ProductScreen.routeName,
                           arguments: {
-                            "merchantId": merchantId.toString().trim(),
+                            "merchant": merchant,
                             "product": product.toMap(),
                           },
                         );

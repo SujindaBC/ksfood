@@ -33,115 +33,110 @@ class AutomatedSlideCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: CarouselSlider(
-                      items: List.generate(
-                        snapshot.data?.docs.length ?? 3,
-                        (index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Badge(
-                              label: const Text("Sale"),
-                              offset: const Offset(-24, 8),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    MerchantScreen.routeName,
-                                    arguments: Merchant.fromMap(
-                                      snapshot.data!.docs[index].data()
-                                          as Map<String, dynamic>,
-                                    ).toMap(),
-                                  );
-                                },
-                                child: Container(
-                                  width: 125,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black.withAlpha(50),
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                      8.0,
-                                    ),
+                  CarouselSlider(
+                    items: List.generate(
+                      snapshot.data!.docs.length,
+                      (index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 12.0),
+                          child: Badge(
+                            label: const Text("Sale"),
+                            offset: const Offset(-24, 8),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  MerchantScreen.routeName,
+                                  arguments: Merchant.fromMap(
+                                    snapshot.data!.docs[index].data()
+                                        as Map<String, dynamic>,
+                                  ).toMap(),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black.withAlpha(50),
                                   ),
-                                  child: AspectRatio(
-                                    aspectRatio: 2 / 2.5,
-                                    child: Column(
-                                      children: [
-                                        AspectRatio(
-                                          aspectRatio: 1 / 1,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topLeft: Radius.circular(7.0),
-                                              topRight: Radius.circular(7.0),
-                                            ),
-                                            child: Image.network(
-                                              snapshot.data?.docs[index]
-                                                      ["image"] ??
-                                                  "",
-                                              fit: BoxFit.cover,
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    value: loadingProgress
-                                                                .expectedTotalBytes !=
-                                                            null
-                                                        ? loadingProgress
-                                                                .cumulativeBytesLoaded /
-                                                            loadingProgress
-                                                                .expectedTotalBytes!
-                                                        : null,
-                                                  ),
-                                                );
-                                              },
-                                              errorBuilder:
-                                                  (BuildContext context,
-                                                      Object error,
-                                                      StackTrace? stackTrace) {
-                                                return const Icon(Icons.error);
-                                              },
-                                            ),
+                                  borderRadius: BorderRadius.circular(
+                                    8.0,
+                                  ),
+                                ),
+                                child: AspectRatio(
+                                  aspectRatio: 2 / 2.5,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AspectRatio(
+                                        aspectRatio: 1 / 1,
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(7.0),
+                                            topRight: Radius.circular(7.0),
+                                          ),
+                                          child: Image.network(
+                                            snapshot.data?.docs[index]
+                                                    ["image"] ??
+                                                "",
+                                            fit: BoxFit.cover,
+                                            loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: loadingProgress
+                                                              .expectedTotalBytes !=
+                                                          null
+                                                      ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                      : null,
+                                                ),
+                                              );
+                                            },
+                                            errorBuilder: (BuildContext context,
+                                                Object error,
+                                                StackTrace? stackTrace) {
+                                              return const Icon(Icons.error);
+                                            },
                                           ),
                                         ),
-                                        const SizedBox(height: 4.0),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0),
-                                          child: Text(
-                                            snapshot.data?.docs[index]["name"],
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium,
-                                          ),
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        child: Text(
+                                          snapshot.data?.docs[index]["name"],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      options: CarouselOptions(
-                        initialPage: 0,
-                        padEnds: false,
-                        height: 140,
-                        viewportFraction: 0.35,
-                        pageSnapping: true,
-                        autoPlay: true,
-                      ),
+                          ),
+                        );
+                      },
+                    ),
+                    options: CarouselOptions(
+                      initialPage: 0,
+                      padEnds: false,
+                      height: 140,
+                      viewportFraction: 0.3,
+                      pageSnapping: true,
+                      autoPlay: true,
                     ),
                   ),
                 ],

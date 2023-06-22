@@ -1,35 +1,36 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'cart_bloc.dart';
 
 class CartState extends Equatable {
   const CartState({
     required this.status,
-    this.merchantId,
-    this.items,
+    this.merchant,
+    this.carts,
   });
 
   final CartStateStatus status;
-  final String? merchantId;
-  final Iterable<CartItem>? items;
+  final Merchant? merchant;
+  final List<Cart>? carts;
 
   factory CartState.initial() {
     return const CartState(
       status: CartStateStatus.initial,
-      items: [],
+      carts: [],
     );
   }
 
   @override
-  List<Object?> get props => [status, merchantId, items];
+  List<Object?> get props => [status, merchant, carts];
 
   CartState copyWith({
     CartStateStatus? status,
-    String? merchantId,
-    Iterable<CartItem>? items,
+    Merchant? merchant,
+    List<Cart>? carts,
   }) {
     return CartState(
       status: status ?? this.status,
-      merchantId: merchantId ?? this.merchantId,
-      items: items ?? this.items,
+      merchant: merchant ?? this.merchant,
+      carts: carts ?? this.carts,
     );
   }
 }

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:ksfood/models/product.dart';
@@ -6,21 +7,21 @@ class CartItem {
   const CartItem({
     required this.product,
     required this.quantity,
-    required this.comment,
+    required this.note,
   });
   final Product product;
   final int quantity;
-  final String comment;
+  final String note;
 
   CartItem copyWith({
     Product? product,
     int? quantity,
-    String? comment,
+    String? note,
   }) {
     return CartItem(
       product: product ?? this.product,
       quantity: quantity ?? this.quantity,
-      comment: comment ?? this.comment,
+      note: note ?? this.note,
     );
   }
 
@@ -28,7 +29,7 @@ class CartItem {
     return <String, dynamic>{
       'product': product.toMap(),
       'quantity': quantity,
-      'comment': comment,
+      'note': note,
     };
   }
 
@@ -36,7 +37,7 @@ class CartItem {
     return CartItem(
       product: Product.fromMap(map['product'] as Map<String, dynamic>),
       quantity: map['quantity'] as int,
-      comment: map['comment'] as String,
+      note: map['note'] as String,
     );
   }
 
@@ -47,5 +48,17 @@ class CartItem {
 
   @override
   String toString() =>
-      'CartItem(product: ${product.name}, quantity: $quantity, comment: $comment)';
+      'CartItem(product: $product, quantity: $quantity, note: $note)';
+
+  @override
+  bool operator ==(covariant CartItem other) {
+    if (identical(this, other)) return true;
+
+    return other.product == product &&
+        other.quantity == quantity &&
+        other.note == note;
+  }
+
+  @override
+  int get hashCode => product.hashCode ^ quantity.hashCode ^ note.hashCode;
 }

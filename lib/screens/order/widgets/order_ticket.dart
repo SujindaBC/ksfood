@@ -29,7 +29,7 @@ class OrderTicket extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Order #${state.merchantId.hashCode}',
+                  'Order #${state.merchant!.id}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
