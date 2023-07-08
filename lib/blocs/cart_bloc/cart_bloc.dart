@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:ksfood/models/cart_item.dart';
 import 'package:ksfood/models/cart_model.dart';
 import 'package:ksfood/models/merchant.dart';
+import 'package:ksfood/models/payment_model.dart';
 import 'package:ksfood/models/product.dart';
 import 'package:uuid/uuid.dart';
 
@@ -116,7 +117,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
               <Cart>[]; // List to track carts that need to be removed
 
           for (var cart in updatedCarts) {
-            final updatedItems = List<CartItem>.from(cart.items ?? []);
+            final updatedItems = List<CartItem>.from(cart.items);
 
             // Find the cart item with the specified product id
             final index = updatedItems.indexWhere(
@@ -141,7 +142,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             // Update the items of the cart
             final updatedCart = cart.copyWith(items: updatedItems);
 
-            if (updatedCart.items?.isEmpty ?? false) {
+            if (updatedCart.items.isEmpty) {
               // Add the cart to the list of carts to be removed
               cartsToRemove.add(cart);
             } else {

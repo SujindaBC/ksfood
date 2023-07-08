@@ -12,7 +12,7 @@ class DeliveryAddressSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(
-            "Delivery address:",
+            "Delivery to:",
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),

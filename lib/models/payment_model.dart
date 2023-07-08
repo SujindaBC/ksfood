@@ -26,3 +26,8 @@ final Map<PaymentMethod, String> paymentMethodIcons = {
   // PaymentMethod.mobileBankingSCB: "lib/images/scb.png"
   // Add more payment methods and their icons here
 };
+
+final Map<PaymentMethod, double> paymentFees = {
+  PaymentMethod.promptPay: 1.65,
+  PaymentMethod.mobileBankingKBank: 10,
+};

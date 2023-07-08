@@ -131,10 +131,10 @@ class AutomatedSlideCard extends StatelessWidget {
                       },
                     ),
                     options: CarouselOptions(
+                      height: 155,
                       initialPage: 0,
                       padEnds: false,
-                      height: 140,
-                      viewportFraction: 0.3,
+                      viewportFraction: 0.4,
                       pageSnapping: true,
                       autoPlay: true,
                     ),

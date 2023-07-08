@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ksfood/screens/cart/widgets/cart_item_section.dart';
-import 'package:ksfood/screens/cart/widgets/delivery_address_section.dart';
-import 'package:ksfood/screens/cart/widgets/payment_section.dart';
-import 'package:ksfood/screens/cart/widgets/proceed_button.dart';
+import 'package:ksfood/screens/cart/widgets/continue_button.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = "/cart";
@@ -13,21 +11,25 @@ class CartScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        body: SingleChildScrollView(
+        body: const SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const DeliveryAddressSection(),
-              const SizedBox(height: 12.0),
-              const CartItemSection(),
-              const SizedBox(height: 8.0),
-              const PaymentSection(),
-              const SizedBox(height: 12.0),
-              ProceedToPaymentButton(),
-              const SizedBox(height: 12.0),
+              SizedBox(height: 12.0),
+              CartItemSection(),
             ],
           ),
+        ),
+        bottomSheet: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.0),
+              child: ContinueButton(),
+            ),
+          ],
         ),
       ),
     );

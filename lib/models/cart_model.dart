@@ -19,6 +19,14 @@ class Cart {
   final Merchant merchant;
   final DateTime timeCreated;
 
+  double get totalPrice {
+    double total = 0.0;
+    for (final item in items) {
+      total += item.product.price * item.quantity;
+    }
+    return total;
+  }
+
   Cart copyWith({
     String? id,
     List<CartItem>? items,

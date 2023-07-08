@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ksfood/app_bloc/app_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
@@ -10,6 +10,7 @@ import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
 import 'package:ksfood/screens/cart/cart_screen.dart';
+import 'package:ksfood/screens/checkout/checkout_screen.dart';
 import 'package:ksfood/screens/main/main_screen.dart';
 import 'package:ksfood/screens/merchant/merchant_screen.dart';
 import 'package:ksfood/screens/product/product_screen.dart';
@@ -23,11 +24,26 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // Using FlutterDownloader for Promptpay QR download
-  await FlutterDownloader.initialize(
-    debug: true,
-  );
-  runApp(const MyApp());
+
+  LocationPermission locationPermission = await Geolocator.requestPermission();
+
+  switch (locationPermission) {
+    case LocationPermission.denied:
+      await Geolocator.requestPermission();
+      break;
+    case LocationPermission.deniedForever:
+      await Geolocator.requestPermission();
+      break;
+    case LocationPermission.whileInUse:
+      await Geolocator.requestPermission();
+      break;
+    case LocationPermission.unableToDetermine:
+      await Geolocator.requestPermission();
+      break;
+    case LocationPermission.always:
+      runApp(const MyApp());
+      break;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -65,6 +81,11 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'KS Food',
           theme: ThemeData(
+            appBarTheme: const AppBarTheme(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
             fontFamily: "Noto Sans Thai",
             primaryColor: const Color(
               0xFF5DB329,
@@ -84,7 +105,8 @@ class MyApp extends StatelessWidget {
                 const MerchantScreen(),
             ProductScreen.routeName: (context) => const ProductScreen(),
             CartScreen.routeName: (context) => const CartScreen(),
-            PromptPayScreen.routeName: (context) => const PromptPayScreen()
+            CheckoutScreen.routeName: (context) => const CheckoutScreen(),
+            PromptPayScreen.routeName: (context) => const PromptPayScreen(),
           },
         ),
       ),

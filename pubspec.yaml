@@ -49,10 +49,12 @@ dependencies:
   intl: ^0.18.1
   flutter_svg: ^2.0.7
   http: ^0.13.6
-  image: ^4.0.17
-  flutter_downloader: ^1.10.4
   path_provider: ^2.0.15
   uuid: ^3.0.7
+  flutter_inappwebview: ^5.7.2+3
+  flutter_cache_manager: ^3.3.0
+  geocoding: ^2.1.0
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

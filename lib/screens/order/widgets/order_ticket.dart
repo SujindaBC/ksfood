@@ -75,11 +75,11 @@ class OrderTicket extends StatelessWidget {
       children: [
         Text(
           '$productName x $quantity',
-          style: TextStyle(fontSize: 14.0),
+          style: const TextStyle(fontSize: 14.0),
         ),
         Text(
           '\$${(quantity * price).toStringAsFixed(2)}',
-          style: TextStyle(fontSize: 14.0),
+          style: const TextStyle(fontSize: 14.0),
         ),
       ],
     );
