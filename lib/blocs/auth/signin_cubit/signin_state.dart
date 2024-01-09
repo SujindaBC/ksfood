@@ -1,4 +1,5 @@
-part of 'signin_bloc.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+part of 'signin_cubit.dart';
 
 class SigninState extends Equatable {
   const SigninState({
@@ -15,11 +16,19 @@ class SigninState extends Equatable {
 
   @override
   List<Object> get props => [status];
+
+  SigninState copyWith({
+    SigninStatus? status,
+  }) {
+    return SigninState(
+      status: status ?? this.status,
+    );
+  }
 }
 
 enum SigninStatus {
   initial,
-  loading,
-  loaded,
+  submitting,
+  success,
   error,
 }

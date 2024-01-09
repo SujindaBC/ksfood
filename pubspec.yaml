@@ -55,6 +55,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   geocoding: ^2.1.0
   geolocator: ^9.0.2
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +86,7 @@ flutter:
 
   assets:
     - lib/images/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

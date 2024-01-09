@@ -15,6 +15,14 @@ class ChargeState extends Equatable {
       status: ChargeStatus.initial,
     );
   }
+
+  ChargeState copyWith({
+    ChargeStatus? status,
+  }) {
+    return ChargeState(
+      status: status ?? this.status,
+    );
+  }
 }
 
 enum ChargeStatus {

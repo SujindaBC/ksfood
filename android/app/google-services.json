@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:509171996091:android:2d92593910198b7c72a09e",
+        "android_client_info": {
+          "package_name": "com.example.ks_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509171996091-1i5fhu88k8e35d2269ecd9jchdv7t13r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZUAcPGosRrB28qd3zKq60EUGcOJMEOdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509171996091-1i5fhu88k8e35d2269ecd9jchdv7t13r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "509171996091-6auq6a2948k9p0qg26lof6cu8a189m0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ksfood.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:509171996091:android:e6f8c2e36c3bb2c072a09e",
         "android_client_info": {
           "package_name": "com.sujindaboonchuay.ksfood"

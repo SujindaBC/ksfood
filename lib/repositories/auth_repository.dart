@@ -8,6 +8,9 @@ class AuthRepository {
 
   Stream<User?> get user => firebaseAuth.userChanges();
 
+  Future<void> verificationCompleted(
+      PhoneAuthCredential phoneAuthCredential) async {}
+
   // Signin with phone number
   Future<void> verifyPhoneNumber({
     required String phoneNumber,

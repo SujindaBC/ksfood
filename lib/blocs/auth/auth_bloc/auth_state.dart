@@ -1,37 +1,33 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'auth_bloc.dart';
 
 class AuthState extends Equatable {
   const AuthState({
-    required this.isLoading,
     required this.status,
-    this.user,
+    required this.user,
     this.authError,
   });
 
-  final bool isLoading;
   final AuthStatus status;
   final User? user;
   final AuthError? authError;
 
-  factory AuthState.initial() {
+  factory AuthState.unknown() {
     return const AuthState(
-      isLoading: false,
-      status: AuthStatus.unauthenticated,
+      status: AuthStatus.unknown,
+      user: null,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, user, authError];
+  List<Object?> get props => [status, user, authError];
 
-  AuthState copyWith(
-    AuthState authState, {
-    bool? isLoading,
+  AuthState copyWith({
     AuthStatus? status,
     User? user,
     AuthError? authError,
   }) {
     return AuthState(
-      isLoading: isLoading ?? this.isLoading,
       status: status ?? this.status,
       user: user ?? this.user,
       authError: authError ?? this.authError,

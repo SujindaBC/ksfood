@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ksfood/app_bloc/app_bloc.dart';
+import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
+import 'package:ksfood/firebase_options.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
 import 'package:ksfood/screens/auth/otp_screean.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
@@ -15,16 +17,25 @@ import 'package:ksfood/screens/main/main_screen.dart';
 import 'package:ksfood/screens/merchant/merchant_screen.dart';
 import 'package:ksfood/screens/product/product_screen.dart';
 import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
-import 'auth/auth_bloc/auth_bloc.dart';
-import 'firebase_options.dart';
 
 void main() async {
-  // Ensure initialization is complete before running app
+  // Ensure initialization is complete before running app.
+  // For more details https://docs.flutter.dev/resources/architectural-overview#architectural-layers
   WidgetsFlutterBinding.ensureInitialized();
+
+  // To load the .env file contents into dotenv.
+  // NOTE: fileName defaults to .env and can be omitted in this case.
+  await dotenv.load(fileName: ".env");
+
+  // Firebase.initializeApp() needs to call native code to initialize Firebase,
+  // and since the plugin needs to use platform channels to call the native code,
+  // which is done asynchronously therefore you have to call ensureInitialized()
+  // to make sure that you have an instance of the WidgetsBinding.
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Request user device location permission.
   LocationPermission locationPermission = await Geolocator.requestPermission();
 
   switch (locationPermission) {
@@ -61,11 +72,6 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AppBloc>(
-            create: (BuildContext context) => AppBloc(
-              authRepository: context.read<AuthRepository>(),
-            ),
-          ),
           BlocProvider<AuthBloc>(
             create: (BuildContext context) => AuthBloc(
               authRepository: context.read<AuthRepository>(),
