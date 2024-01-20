@@ -25,7 +25,6 @@ class SigninCubit extends Cubit<SigninState> {
     try {
       authRepository.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: verificationFailed,
         codeSent: codeSent,
         timeout: timeout,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/screens/merchant/widgets/products_list.dart';
 import 'package:ksfood/widgets/appbar_action_cart_button.dart';
@@ -116,6 +118,18 @@ class _MerchantScreenState extends State<MerchantScreen> {
               ProductsList(merchant: merchant)
             ],
           ),
+        ),
+        floatingActionButton: BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            if (state.carts!.isEmpty) {
+              return const SizedBox();
+            } else {
+              return FloatingActionButton(
+                onPressed: () {},
+                child: const AppBarActionCartButton(),
+              );
+            }
+          },
         ),
       ),
     );

@@ -10,7 +10,7 @@ import 'package:ksfood/blocs/auth/signin_cubit/signin_cubit.dart';
 import 'package:ksfood/helpers/format_phonenumber.dart';
 import 'package:ksfood/loading/loading_screen.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
-import 'package:ksfood/screens/auth/otp_screean.dart';
+import 'package:ksfood/screens/auth/otp_screen.dart';
 
 import '../../helpers/phonenumber_formatter.dart';
 
@@ -65,6 +65,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   }
 
   codeSent(String verificationId, int? forceResendingToken) {
+    LoadingScreen.instance().hide();
     Navigator.pushNamed(
       context,
       OTPScreen.routeName,
@@ -81,16 +82,19 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   codeAutoRetrievalTimeout(String verificationId) async {
     debugPrint("This error: $verificationId");
     final AuthStatus authStatus = context.read<AuthBloc>().state.status;
-    if (authStatus == AuthStatus.unauthenticated) {}
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text("Time out"),
-          content: Text("Time out"),
-        );
-      },
-    );
+    if (authStatus == AuthStatus.unauthenticated) {
+      LoadingScreen.instance().hide();
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text("Time out"),
+            content: Text("คุณทำรายการเกินเวลาที่กำหนด, กรุณาลองใหม่อีกครั้ง."),
+          );
+        },
+      );
+    }
   }
 
   bool isButtonEnable = false;
@@ -111,7 +115,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               Navigator.pop(context);
             },
           ),
-          title: const Text('Phone Authentication'),
+          title: const Text("Phone Auth"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -119,16 +123,17 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
             child: Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
                   const Text(
-                    'Enter your phone number',
+                    "กรุณาใส่หมายเลขมือถือ",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16.0),
                   // Subtitle before OTP request
                   const Text(
                     "We will send you a One-Time Password (OTP) to your phone number.",
@@ -136,7 +141,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       fontSize: 16.0,
                     ),
                   ),
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 32.0),
 
                   // Phone Number
                   TextFormField(
@@ -169,46 +174,55 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   ),
                   const SizedBox(height: 16.0),
                   // Request OTP Button
-                  FilledButton(
-                    onPressed: () {},
-                    child: SizedBox(child: Center(
-                      child: BlocBuilder<SigninCubit, SigninState>(
-                          builder: (context, state) {
-                        switch (state.status) {
-                          case SigninStatus.initial:
-                            return Text(
-                              "Request OTP",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                            );
-                          case SigninStatus.submitting:
+                  BlocBuilder<SigninCubit, SigninState>(
+                    builder: (context, state) {
+                      if (state.status == SigninStatus.submitting) {
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+                      return FilledButton(
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          if (_formKey.currentState!.validate()) {
+                            String phoneNumber =
+                                _phoneController.value.text.trim();
+                            phoneNumber = phoneNumber.replaceAll("-", "");
+                            phoneNumber = "+66${phoneNumber.substring(1)}";
+                            developer.log(phoneNumber);
+                            context.read<SigninCubit>().verifyPhoneNumber(
+                                  phoneNumber: phoneNumber,
+                                  verificationFailed:
+                                      (FirebaseAuthException exception) {
+                                    verificationFailed(context, exception);
+                                  },
+                                  codeSent: codeSent,
+                                  timeout: _timeOut,
+                                  codeAutoRetrievalTimeout:
+                                      codeAutoRetrievalTimeout,
+                                );
+                          }
+                        },
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                12.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: BlocBuilder<SigninCubit, SigninState>(
+                            builder: (context, state) {
+                          if (state.status == SigninStatus.submitting) {
                             return const CupertinoActivityIndicator();
-                          case SigninStatus.success:
-                            return Text(
-                              "Request OTP",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                            );
-                          case SigninStatus.error:
-                            return Text(
-                              "Request OTP",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                            );
-                          default:
-                            return Text(
-                              "Request OTP",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                            );
-                        }
-                      }),
-                    )),
+                          }
+                          return const Text("Request OTP");
+                        }),
+                      );
+                    },
                   ),
+
                   const SizedBox(height: 16.0),
                 ],
               ),

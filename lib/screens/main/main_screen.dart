@@ -85,9 +85,7 @@ class MainScreen extends StatelessWidget {
                     })
               ],
             ),
-            actions: const [
-              AppBarActionCartButton(),
-            ],
+            actions: const [],
           ),
           drawer: const AppDrawer(),
           body: const SingleChildScrollView(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -8,8 +10,23 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          const DrawerHeader(
-            child: Placeholder(),
+          DrawerHeader(
+            child: Column(
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(SignoutRequestedEvent());
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text("Log out"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.red,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           ListTile(
             onTap: () {

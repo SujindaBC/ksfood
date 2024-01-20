@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
+import 'package:ksfood/blocs/auth/signin_cubit/signin_cubit.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
 import 'package:ksfood/firebase_options.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
-import 'package:ksfood/screens/auth/otp_screean.dart';
+import 'package:ksfood/screens/auth/auth_gate.dart';
+import 'package:ksfood/screens/auth/otp_screen.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
 import 'package:ksfood/screens/cart/cart_screen.dart';
 import 'package:ksfood/screens/checkout/checkout_screen.dart';
@@ -77,6 +79,11 @@ class MyApp extends StatelessWidget {
               authRepository: context.read<AuthRepository>(),
             ),
           ),
+          BlocProvider(
+            create: (context) => SigninCubit(
+              authRepository: context.read<AuthRepository>(),
+            ),
+          ),
           BlocProvider<CartBloc>(
             create: (context) => CartBloc(),
           ),
@@ -101,8 +108,9 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          initialRoute: MainScreen.routeName,
+          initialRoute: AuthGateScreen.routeName,
           routes: {
+            AuthGateScreen.routeName: (context) => const AuthGateScreen(),
             PhoneAuthScreen.routeName: (BuildContext context) =>
                 const PhoneAuthScreen(),
             OTPScreen.routeName: (BuildContext context) => const OTPScreen(),
