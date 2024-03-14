@@ -8,7 +8,6 @@ import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
 import 'package:ksfood/models/payment_model.dart';
 import 'package:ksfood/screens/checkout/checkout_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
 
 class ProceedToPaymentButton extends StatelessWidget {
   const ProceedToPaymentButton({
@@ -51,15 +50,6 @@ class ProceedToPaymentButton extends StatelessWidget {
             },
           );
           if (response.statusCode == 200) {
-            Navigator.pushNamed(
-              context,
-              PromptPayScreen.routeName,
-              arguments: {
-                "downloadUri":
-                    "https://api.omise.co/charges/chrg_test_5wazoadi52i6reful7d/documents/docu_test_5wazoaf6kvvkw8fxtqr/downloads/5FD1FBFF3666D7EA",
-                "expiresAt": "2023-07-03T17:44:30Z",
-              },
-            );
             log(response.body);
             return response.body;
           } else {

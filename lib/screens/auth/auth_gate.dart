@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/screens/auth/phone_auth_screen.dart';
+import 'package:ksfood/screens/main/main_screen.dart';
 
 class AuthGateScreen extends StatelessWidget {
   const AuthGateScreen({super.key});
@@ -25,6 +26,7 @@ class AuthGateScreen extends StatelessWidget {
     }, listener: (context, state) {
       log("${state.status}");
       if (state.status == AuthStatus.authenticated) {
+        Navigator.pushNamed(context, MainScreen.routeName);
         log("${state.status}");
       } else if (state.status == AuthStatus.unauthenticated) {
         log("${state.status}");

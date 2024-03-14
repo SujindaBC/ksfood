@@ -53,7 +53,7 @@ class MainScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "KS Delivery",
+                  "KS Food",
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall

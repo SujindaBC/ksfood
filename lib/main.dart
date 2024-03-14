@@ -122,6 +122,7 @@ class MyApp extends StatelessWidget {
             CheckoutScreen.routeName: (context) => const CheckoutScreen(),
             PromptPayScreen.routeName: (context) => const PromptPayScreen(),
           },
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );
