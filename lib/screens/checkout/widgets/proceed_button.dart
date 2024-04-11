@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
+import 'package:ksfood/models/charge.dart';
 import 'package:ksfood/models/payment_model.dart';
 import 'package:ksfood/screens/checkout/checkout_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
 
 class ProceedToPaymentButton extends StatelessWidget {
   const ProceedToPaymentButton({
@@ -37,8 +40,8 @@ class ProceedToPaymentButton extends StatelessWidget {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             body: {
-              'amount': "${double.parse(amount) * 100}",
-              'currency': 'THB',
+              "amount": "${double.parse(amount) * 100}",
+              "currency": "THB",
               "source[type]": paymentMethodString(paymentMethod),
               "expires_at": DateTime.now()
                   .add(
@@ -50,6 +53,11 @@ class ProceedToPaymentButton extends StatelessWidget {
             },
           );
           if (response.statusCode == 200) {
+            await FirebaseFirestore.instance.collection("charges").add(
+                  json.decode(
+                    response.body,
+                  ),
+                );
             log(response.body);
             return response.body;
           } else {
@@ -74,7 +82,7 @@ class ProceedToPaymentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PaymentBloc, PaymentState>(
-      builder: (context, state) {
+      builder: (BuildContext context, PaymentState state) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: FilledButton(

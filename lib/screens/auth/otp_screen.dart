@@ -47,6 +47,7 @@ class _OTPScreenState extends State<OTPScreen> {
         }
       },
       builder: (context, state) {
+        LoadingScreen.instance().hide();
         return BlocConsumer<AuthBloc, AuthState>(
           listener: (context, authState) {
             if (authState.status == AuthStatus.authenticated) {

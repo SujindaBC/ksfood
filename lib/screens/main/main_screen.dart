@@ -9,7 +9,7 @@ import 'package:ksfood/loading/loading_screen.dart';
 import 'package:ksfood/screens/main/widgets/ads_slide.dart';
 import 'package:ksfood/screens/main/widgets/automated_slide_card.dart';
 import 'package:ksfood/screens/main/widgets/ks_drawer.dart';
-import 'package:ksfood/screens/main/widgets/nearby_merchants.dart';
+import 'package:ksfood/screens/main/widgets/all_merchants.dart';
 import 'package:ksfood/widgets/appbar_action_cart_button.dart';
 
 class MainScreen extends StatelessWidget {
@@ -95,7 +95,7 @@ class MainScreen extends StatelessWidget {
                 SizedBox(height: 20.0),
                 AutomatedSlideCard(),
                 SizedBox(height: 20),
-                NearbyMerchants(),
+                AllMerchants(),
                 SizedBox(height: 25.0),
               ],
             ),

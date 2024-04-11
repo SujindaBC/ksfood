@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -9,51 +10,28 @@ import 'package:ksfood/screens/promptpay/widgets/countdown_timer.dart';
 
 class PromptPayScreen extends StatelessWidget {
   static const routeName = "/promptpay";
-  const PromptPayScreen({
-    super.key,
-  });
 
-  // Future<Map<String, dynamic>> fetchChargeData({
-  //   required String amount,
-  //   required String type,
-  // }) async {
-  //   try {
-  //     final url = Uri.parse("https://api.omise.co/charges");
-  //     final response = await http.post(
-  //       url,
-  //       headers: {
-  //         "Authorization": "Basic c2tleV90ZXN0XzVueGR2cGM4N3Z3c3JwdTZ6Z286",
-  //         "Content-Type": "application/x-www-form-urlencoded",
-  //       },
-  //       body: {
-  //         'amount': amount,
-  //         'currency': 'THB',
-  //         "source[type]": type,
-  //         "mobile_number": FirebaseAuth.instance.currentUser?.phoneNumber,
-  //       },
-  //     );
-  //     if (response.statusCode == 200) {
-  //       return json.decode(response.body);
-  //     } else {
-  //       throw Exception(response.statusCode);
-  //     }
-  //   } on http.BaseResponse catch (error) {
-  //     log(error.toString());
-  //     throw Exception(error);
-  //   }
-  // }
+  const PromptPayScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments! as Map<String, dynamic>;
-    final String downloadUri = arguments["downloadUri"].toString();
-    final String expiresAt = arguments["expiresAt"].toString();
+    final responseBody = ModalRoute.of(context)!.settings.arguments! as String;
+
+    // Parse the JSON response
+    final responseData = json.decode(responseBody);
+
+    // Extract the relevant data from the response
+    final String downloadUri = responseData["source"]["scannable_code"]["image"]
+            ["download_uri"]
+        .toString();
+    final String expiresAt = responseData["expires_at"].toString();
+    final String amount = (responseData["amount"] / 100).toStringAsFixed(2);
+    final String status = responseData["status"].toString();
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('PromptPay Screen'),
+          title: const Text("PromptPay Screen"),
         ),
         body: FutureBuilder<File>(
           future: DefaultCacheManager().getSingleFile(downloadUri),
@@ -104,6 +82,10 @@ class PromptPayScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    Text("Amount: $amount THB"),
+                    const SizedBox(height: 8),
+                    Text("Status: $status"),
                   ],
                 ),
               );

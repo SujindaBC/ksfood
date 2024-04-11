@@ -9,24 +9,42 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          DrawerHeader(
-            child: Column(
-              children: [
-                FilledButton.icon(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(SignoutRequestedEvent());
-                  },
-                  icon: const Icon(Icons.logout),
-                  label: const Text("Log out"),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.red,
-                    ),
-                  ),
-                )
-              ],
-            ),
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return state.status == AuthStatus.authenticated
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            state.user?.phoneNumber ?? "",
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<AuthBloc>()
+                                  .add(SignoutRequestedEvent());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                            ),
+                            child: const Text(
+                              "Log Out",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox();
+            },
           ),
           ListTile(
             onTap: () {

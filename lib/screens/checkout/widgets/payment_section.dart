@@ -117,9 +117,9 @@ class PaymentListTile extends StatelessWidget {
   String paymentMethodToString(PaymentMethod method) {
     switch (method) {
       case PaymentMethod.promptPay:
-        return 'PromptPay';
+        return "PromptPay";
       case PaymentMethod.mobileBankingKBank:
-        return 'Mobile Banking KBank';
+        return "Mobile Banking KBank";
     }
   }
 

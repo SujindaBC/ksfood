@@ -183,6 +183,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       }
                       return FilledButton(
                         onPressed: () {
+                          LoadingScreen.instance()
+                              .show(context: context, text: "Sending OTP");
                           FocusScope.of(context).unfocus();
                           if (_formKey.currentState!.validate()) {
                             String phoneNumber =
