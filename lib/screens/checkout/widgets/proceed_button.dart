@@ -6,11 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
-import 'package:ksfood/models/charge.dart';
 import 'package:ksfood/models/payment_model.dart';
 import 'package:ksfood/screens/checkout/checkout_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
 
 class ProceedToPaymentButton extends StatelessWidget {
   const ProceedToPaymentButton({
