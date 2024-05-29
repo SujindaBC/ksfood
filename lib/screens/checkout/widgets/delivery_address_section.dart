@@ -25,7 +25,7 @@ class DeliveryAddressSection extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,

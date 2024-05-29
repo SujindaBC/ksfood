@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/blocs/auth/signin_cubit/signin_cubit.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/blocs/location_bloc/location_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
 import 'package:ksfood/firebase_options.dart';
 import 'package:ksfood/repositories/auth_repository.dart';
@@ -90,6 +91,9 @@ class MyApp extends StatelessWidget {
           BlocProvider<PaymentBloc>(
             create: (context) => PaymentBloc(),
           ),
+          BlocProvider<LocationBloc>(
+            create: (context) => LocationBloc()..add(GetCurrentLocation()),
+          ),
         ],
         child: MaterialApp(
           title: 'KS Food',
@@ -97,7 +101,6 @@ class MyApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(
               foregroundColor: Colors.black,
               backgroundColor: Colors.transparent,
-              elevation: 0.0,
             ),
             fontFamily: "Noto Sans Thai",
             primaryColor: const Color(

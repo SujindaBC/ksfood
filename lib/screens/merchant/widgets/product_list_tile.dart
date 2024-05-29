@@ -48,13 +48,8 @@ class ProductListTile extends StatelessWidget {
                   if (loadingProgress == null) {
                     return child;
                   }
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
+                  return const Center(
+                    child: CupertinoActivityIndicator(),
                   );
                 },
                 errorBuilder: (BuildContext context, Object error,

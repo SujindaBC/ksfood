@@ -182,11 +182,35 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         try {
           emit(
             state.copyWith(
-              status: CartStateStatus.loaded,
-              carts: [],
-            ),
+                status: CartStateStatus.loaded, carts: [], selectedCart: null),
           );
           log(state.carts.toString());
+        } catch (error) {
+          emit(
+            state.copyWith(
+              status: CartStateStatus.error,
+            ),
+          );
+        }
+      },
+    );
+
+    on<SelectCart>(
+      (SelectCart event, Emitter<CartState> emit) {
+        emit(
+          state.copyWith(
+            status: CartStateStatus.loading,
+          ),
+        );
+        try {
+          emit(
+            state.copyWith(
+              status: CartStateStatus.loaded,
+              selectedCart: event.selectedCart,
+            ),
+          );
+
+          log("Selected cart: ${state.selectedCart.toString()}");
         } catch (error) {
           emit(
             state.copyWith(

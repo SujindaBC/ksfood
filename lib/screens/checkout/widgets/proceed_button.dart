@@ -1,25 +1,54 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
+import 'package:ksfood/loading/loading_screen.dart';
+import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/models/payment_model.dart';
-import 'package:ksfood/screens/checkout/checkout_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
 
 class ProceedToPaymentButton extends StatelessWidget {
   const ProceedToPaymentButton({
+    required this.merchant,
     super.key,
   });
 
-  Future<String> _createCharge(
-    BuildContext context,
-    PaymentMethod paymentMethod,
-  ) async {
-    // Navigate to the appropriate payment method screen based on the selected payment method
+  final Merchant merchant;
+
+  Future<String> _createCharge({
+    required BuildContext context,
+    required PaymentMethod paymentMethod,
+    required Function(Map<String, dynamic>) onChargeCreated,
+  }) async {
+    // Get current user ID
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      // Handle user not logged in
+      return "User not logged in";
+    }
+
+    // Get selected cart and cart items
+    final selectedCart = context.read<CartBloc>().state.selectedCart;
+    if (selectedCart == null) {
+      // Handle no selected cart
+      return "No cart selected";
+    }
+
+    // final cartItems = selectedCart.items.map((item) {
+    //   return {
+    //     "id": item.product.id,
+    //     'name': item.product.name,
+    //     'quantity': item.quantity,
+    //     'price': item.product.price,
+    //   };
+    // }).toList();
+
     switch (paymentMethod) {
       case PaymentMethod.promptPay:
         try {
@@ -29,7 +58,9 @@ class ProceedToPaymentButton extends StatelessWidget {
                   context.read<CartBloc>().state.paymentFee(
                       context.read<PaymentBloc>().state.selectedPaymentMethod!))
               .toStringAsFixed(2);
+
           log(amount.toString());
+
           final response = await http.post(
             url,
             headers: {
@@ -38,58 +69,64 @@ class ProceedToPaymentButton extends StatelessWidget {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             body: {
-              "amount": "${double.parse(amount) * 100}",
+              "amount":
+                  "${(double.parse(amount) * 100).toInt()}", // Omise expects amount in the smallest currency unit
               "currency": "THB",
               "source[type]": paymentMethodString(paymentMethod),
               "expires_at": DateTime.now()
-                  .add(
-                    const Duration(
-                      seconds: 179,
-                    ),
-                  )
-                  .toString(),
+                  .toUtc()
+                  .add(const Duration(minutes: 3))
+                  .toIso8601String(),
             },
           );
           if (response.statusCode == 200) {
-            await FirebaseFirestore.instance.collection("charges").add(
-                  json.decode(
-                    response.body,
-                  ),
-                );
+            final Map<String, dynamic> chargeData = json.decode(response.body);
+            final DocumentReference chargeRef = FirebaseFirestore.instance
+                .collection("charges")
+                .doc(chargeData["id"]);
+            await chargeRef.set(chargeData);
+
+            final DocumentSnapshot chargeSnapshot = await chargeRef.get();
+            final charge = chargeSnapshot.data() as Map<String, dynamic>;
+            onChargeCreated(charge);
             log(response.body);
+
             return response.body;
           } else {
+            log(response.body);
             return (response.body);
           }
         } on http.BaseResponse catch (error) {
           log(error.toString());
           return error.toString();
         }
-      case PaymentMethod.mobileBankingKBank:
-        Navigator.pushNamed(
-          context,
-          CheckoutScreen.routeName,
-        );
-        return " ";
       default:
-        // Handle unknown payment method
-        return " ";
+        return "Unknown payment method";
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PaymentBloc, PaymentState>(
-      builder: (BuildContext context, PaymentState state) {
+      builder: (BuildContext paymentContext, PaymentState state) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: FilledButton(
             onPressed: state.selectedPaymentMethod != null
-                ? () {
-                    _createCharge(
-                      context,
-                      context.read<PaymentBloc>().state.selectedPaymentMethod!,
-                    );
+                ? () async {
+                    LoadingScreen.instance().show(context: context);
+                    await _createCharge(
+                        context: context,
+                        paymentMethod: context
+                            .read<PaymentBloc>()
+                            .state
+                            .selectedPaymentMethod!,
+                        onChargeCreated: (charge) {
+                          LoadingScreen.instance().hide();
+                          Navigator.pushNamed(
+                              context, PromptPayScreen.routeName,
+                              arguments: charge);
+                        });
                   }
                 : null,
             style: ButtonStyle(
@@ -124,8 +161,6 @@ class ProceedToPaymentButton extends StatelessWidget {
     switch (method) {
       case PaymentMethod.promptPay:
         return "promptpay";
-      case PaymentMethod.mobileBankingKBank:
-        return "mobile_banking_kbank";
     }
   }
 }

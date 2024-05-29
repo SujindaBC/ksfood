@@ -2,6 +2,7 @@ import 'dart:math' show cos, sqrt, asin;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart'; // Add geolocator package
@@ -18,7 +19,7 @@ class AutomatedSlideCard extends StatelessWidget {
       future: _determinePosition(),
       builder: (context, positionSnapshot) {
         if (positionSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CupertinoActivityIndicator());
         }
 
         final userPosition = positionSnapshot.data;
@@ -31,7 +32,7 @@ class AutomatedSlideCard extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CupertinoActivityIndicator());
             }
 
             final merchantDocs = snapshot.data?.docs ?? [];
@@ -127,17 +128,8 @@ class AutomatedSlideCard extends StatelessWidget {
                                         if (loadingProgress == null) {
                                           return child;
                                         }
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
+                                        return const Center(
+                                          child: CupertinoActivityIndicator(),
                                         );
                                       },
                                       errorBuilder: (BuildContext context,

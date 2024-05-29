@@ -118,8 +118,8 @@ class PaymentListTile extends StatelessWidget {
     switch (method) {
       case PaymentMethod.promptPay:
         return "PromptPay";
-      case PaymentMethod.mobileBankingKBank:
-        return "Mobile Banking KBank";
+      // case PaymentMethod.mobileBankingKBank:
+      //   return "Mobile Banking KBank";
     }
   }
 
@@ -127,8 +127,8 @@ class PaymentListTile extends StatelessWidget {
     switch (paymentMethod) {
       case PaymentMethod.promptPay:
         return '1.65%';
-      case PaymentMethod.mobileBankingKBank:
-        return '฿10.00';
+      // case PaymentMethod.mobileBankingKBank:
+      //   return '฿10.00';
     }
   }
 }

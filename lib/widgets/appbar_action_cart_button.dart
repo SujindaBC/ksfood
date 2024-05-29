@@ -10,9 +10,17 @@ class AppBarActionCartButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
+        int totalItemCount = 0;
+
+        if (state.carts != null) {
+          for (var cart in state.carts!) {
+            totalItemCount += cart.items.fold(
+                0, (previousValue, item) => previousValue + item.quantity);
+          }
+        }
         return Badge(
           label: Text(
-            state.carts!.length.toString(),
+            totalItemCount.toString(),
           ),
           isLabelVisible: state.carts!.isNotEmpty,
           offset: const Offset(-5, 5),

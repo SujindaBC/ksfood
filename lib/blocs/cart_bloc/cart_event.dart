@@ -40,3 +40,14 @@ class RemoveProductFromCart extends CartEvent {
 class ClearCart extends CartEvent {
   const ClearCart();
 }
+
+class SelectCart extends CartEvent {
+  const SelectCart({
+    required this.selectedCart,
+  });
+
+  final Cart selectedCart;
+
+  @override
+  List<Object> get props => [selectedCart];
+}

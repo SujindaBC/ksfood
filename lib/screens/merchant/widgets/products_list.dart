@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ksfood/models/merchant.dart';
 import 'package:ksfood/models/product.dart';
@@ -74,14 +75,8 @@ class ProductsList extends StatelessWidget {
                               if (loadingProgress == null) {
                                 return child;
                               }
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
+                              return const Center(
+                                child: CupertinoActivityIndicator(),
                               );
                             },
                             errorBuilder: (BuildContext context, Object error,
@@ -121,7 +116,7 @@ class ProductsList extends StatelessWidget {
             );
           default:
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             );
         }
       },

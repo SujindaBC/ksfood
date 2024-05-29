@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'loading_screen_controller.dart';
@@ -12,14 +13,12 @@ class LoadingScreen {
 
   void show({
     required BuildContext context,
-    required String text,
   }) {
-    if (_controller?.update(text) ?? false) {
+    if (_controller?.update("Please wait") ?? false) {
       return;
     } else {
       _controller = showOverlay(
         context: context,
-        text: text,
       );
     }
   }
@@ -31,13 +30,15 @@ class LoadingScreen {
 
   LoadingScreenController showOverlay({
     required BuildContext context,
-    required String text,
   }) {
-    final text0 = StreamController<String>();
-    text0.add(text);
+    final textStream = StreamController<String>();
+    textStream.add("Please wait");
 
     final state = Overlay.of(context);
-    final renderBox = context.findRenderObject() as RenderBox;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) {
+      throw Exception("The context provided is not valid.");
+    }
     final size = renderBox.size;
 
     final overlay = OverlayEntry(
@@ -63,10 +64,10 @@ class LoadingScreen {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 10),
-                      const CircularProgressIndicator(),
+                      const CupertinoActivityIndicator(),
                       const SizedBox(height: 20),
                       StreamBuilder(
-                        stream: text0.stream,
+                        stream: textStream.stream,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Text(snapshot.data as String,
@@ -94,12 +95,12 @@ class LoadingScreen {
 
     return LoadingScreenController(
       close: () {
-        text0.close();
+        textStream.close();
         overlay.remove();
         return true;
       },
       update: (text) {
-        text0.add(text);
+        textStream.add(text);
         return true;
       },
     );

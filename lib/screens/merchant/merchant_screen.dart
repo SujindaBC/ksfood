@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -55,13 +56,8 @@ class _MerchantScreenState extends State<MerchantScreen> {
                         if (loadingProgress == null) {
                           return child;
                         }
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
                         );
                       },
                       errorBuilder: (BuildContext context, Object error,
@@ -72,6 +68,8 @@ class _MerchantScreenState extends State<MerchantScreen> {
                   ),
                 ),
               ),
+
+              // Merchant name
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
@@ -109,7 +107,6 @@ class _MerchantScreenState extends State<MerchantScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 8.0),
               const Divider(
                 indent: 12.0,
                 endIndent: 12.0,

@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CountdownTimer extends StatefulWidget {
   final DateTime expiresAt;
-
+  final String chargeId;
   const CountdownTimer({
     super.key,
     required this.expiresAt,
+    required this.chargeId,
   });
 
   @override
@@ -16,26 +18,26 @@ class CountdownTimer extends StatefulWidget {
 class _CountdownTimerState extends State<CountdownTimer> {
   late Timer _timer;
   late DateTime _currentTime;
-  late Duration _remainingTime;
+  late int _remainingSeconds;
 
   @override
   void initState() {
     super.initState();
     _currentTime = DateTime.now();
-    _remainingTime = widget.expiresAt.difference(_currentTime);
+    _remainingSeconds = widget.expiresAt.difference(_currentTime).inSeconds;
     _startTimer();
   }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        _currentTime = DateTime.now();
-        _remainingTime = widget.expiresAt.difference(_currentTime);
+        if (_remainingSeconds > 0) {
+          _remainingSeconds--;
+        } else {
+          _timer.cancel();
+          Navigator.of(context).pop();
+        }
       });
-
-      if (_remainingTime.inSeconds <= 0) {
-        _timer.cancel();
-      }
     });
   }
 
@@ -45,17 +47,17 @@ class _CountdownTimerState extends State<CountdownTimer> {
     super.dispose();
   }
 
-  String _formatTime(Duration duration) {
+  String _formatTime(int seconds) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String minutes = twoDigits(duration.inMinutes.remainder(60));
-    String seconds = twoDigits(duration.inSeconds.remainder(60));
-    return '$minutes:$seconds';
+    String minutes = twoDigits((seconds ~/ 60) % 60);
+    String secs = twoDigits(seconds % 60);
+    return '$minutes:$secs';
   }
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      _formatTime(_remainingTime),
+      _formatTime(_remainingSeconds),
       style: const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,

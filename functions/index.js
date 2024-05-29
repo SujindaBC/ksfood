@@ -1,19 +1,63 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+/* eslint linebreak-style: ["error", "windows"]*/
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+// Initialize Firestore
+admin.initializeApp();
+const db = admin.firestore();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+exports.webhook = functions.https.onRequest(async (req, res) => {
+  console.log(req.body);
+  try {
+    const event = req.body;
+    if (event.key === "charge.create" || event.key === "charge.complete") {
+      const charge = event.data;
+      const chargeId = charge.id;
+      const status = charge.status;
+      const amount = charge.amount;
+      const currency = charge.currency;
+      const paidAt = charge.paid_at;
+      const userId = charge.metadata.userId;
+      const cartItems = JSON.parse(charge.metadata.cartItems);
+      const merchantLocation = JSON.parse(charge.metadata.merchantLocation);
+      const deliveryLocation = JSON.parse(charge.metadata.deliveryLocation);
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+      await db.collection("charges").doc(chargeId).set({
+        status: status,
+        amount: amount,
+        currency: currency,
+        paidAt: paidAt,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      }, {merge: true});
+
+      if (status === "successful") {
+        const orderData = {
+          chargeId: chargeId,
+          amount: amount,
+          currency: currency,
+          paidAt: paidAt,
+          status: "waiting to process", // Initial order status
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          userId: userId, // Add userId to order
+          items: cartItems, // Add cart items to order
+          merchantLocation: merchantLocation, // Add merchant location to order
+          deliveryLocation: deliveryLocation, // Add delivery location to order
+          deliveryPartner: null, // Initial delivery partner details
+        };
+
+        const orderRef = await db.collection("orders").add(orderData);
+        console.log("Order created with ID:", orderRef.id);
+      }
+
+      res.status(200).send("Webhook processed successfully");
+    } else {
+      res.status(400).send("Event type not handled");
+    }
+  } catch (error) {
+    console.error("Error processing webhook:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});

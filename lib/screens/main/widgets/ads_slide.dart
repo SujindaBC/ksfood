@@ -1,3 +1,4 @@
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_image_slideshow/flutter_image_slideshow.dart";
 
@@ -13,13 +14,8 @@ class AdsSlide extends StatelessWidget {
         if (loadingProgress == null) {
           return child;
         }
-        return Center(
-          child: CircularProgressIndicator(
-            value: loadingProgress.expectedTotalBytes != null
-                ? loadingProgress.cumulativeBytesLoaded /
-                    loadingProgress.expectedTotalBytes!
-                : null,
-          ),
+        return const Center(
+          child: CupertinoActivityIndicator(),
         );
       },
       errorBuilder:
@@ -49,13 +45,8 @@ class AdsSlide extends StatelessWidget {
                 if (loadingProgress == null) {
                   return child;
                 }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
+                return const Center(
+                  child: CupertinoActivityIndicator(),
                 );
               },
               errorBuilder:
@@ -75,13 +66,8 @@ class AdsSlide extends StatelessWidget {
                 if (loadingProgress == null) {
                   return child;
                 }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
+                return const Center(
+                  child: CupertinoActivityIndicator(),
                 );
               },
             ),

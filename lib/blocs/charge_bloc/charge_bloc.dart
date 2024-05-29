@@ -30,14 +30,19 @@ class ChargeBloc extends Bloc<ChargeEvent, ChargeState> {
                     cartBloc.state
                         .paymentFee(paymentBloc.state.selectedPaymentMethod!))
                 .toStringAsFixed(2);
-            log(amount.toString());
+            log(amount.toString(), time: DateTime.now());
 
-            final DateTime currentUtcTime = DateTime.now().toUtc();
+            final DateTime currentUtcTime =
+                DateTime.now().isUtc ? DateTime.now() : DateTime.now().toUtc();
+
+            log(DateTime.now().toIso8601String());
+            log(DateTime.now().toUtc().toIso8601String());
 
             final expirationTime =
-                currentUtcTime.add(const Duration(seconds: 179));
+                currentUtcTime.add(const Duration(minutes: 3));
 
             final formattedExpirationTime = expirationTime.toIso8601String();
+            log(formattedExpirationTime);
 
             final response = await http.post(
               url,
@@ -67,7 +72,7 @@ class ChargeBloc extends Bloc<ChargeEvent, ChargeState> {
             emit(state.copyWith(status: ChargeStatus.failed));
             log(error.toString(), error: error);
           }
-        case PaymentMethod.mobileBankingKBank:
+        // case PaymentMethod.mobileBankingKBank:
           break;
       }
     });
@@ -76,8 +81,8 @@ class ChargeBloc extends Bloc<ChargeEvent, ChargeState> {
     switch (method) {
       case PaymentMethod.promptPay:
         return "promptpay";
-      case PaymentMethod.mobileBankingKBank:
-        return "mobile_banking_kbank";
+      // case PaymentMethod.mobileBankingKBank:
+      //   return "mobile_banking_kbank";
     }
   }
 }

@@ -30,7 +30,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   late final TextEditingController _phoneController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final Duration _timeOut = const Duration(seconds: 30);
+  final Duration _timeOut = const Duration(seconds: 60);
 
   @override
   void initState() {
@@ -107,126 +107,140 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: BackButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: const Text("Phone Auth"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  const Text(
-                    "กรุณาใส่หมายเลขมือถือ",
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // Subtitle before OTP request
-                  const Text(
-                    "We will send you a One-Time Password (OTP) to your phone number.",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const SizedBox(height: 32.0),
-
-                  // Phone Number
-                  TextFormField(
-                    maxLength: 12,
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    keyboardAppearance: Brightness.dark,
-                    inputFormatters: [
-                      PhoneNumberFormatter(),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      counter: SizedBox.shrink(),
-                      isDense: true,
-                      labelText: "Phone Number",
-                      hintText: "0XX-XXX-XXXX",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12.0),
-                        ),
-                        borderSide: BorderSide(
-                            color: Colors.black12, style: BorderStyle.solid),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 32.0),
+                    // Title
+                    const Text(
+                      "กรุณาใส่หมายเลขมือถือ",
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  // Request OTP Button
-                  BlocBuilder<SigninCubit, SigninState>(
-                    builder: (context, state) {
-                      if (state.status == SigninStatus.submitting) {
-                        return const Center(
-                          child: CupertinoActivityIndicator(),
-                        );
-                      }
-                      return FilledButton(
-                        onPressed: () {
-                          LoadingScreen.instance()
-                              .show(context: context, text: "Sending OTP");
-                          FocusScope.of(context).unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            String phoneNumber =
-                                _phoneController.value.text.trim();
-                            phoneNumber = phoneNumber.replaceAll("-", "");
-                            phoneNumber = "+66${phoneNumber.substring(1)}";
-                            developer.log(phoneNumber);
-                            context.read<SigninCubit>().verifyPhoneNumber(
-                                  phoneNumber: phoneNumber,
-                                  verificationFailed:
-                                      (FirebaseAuthException exception) {
-                                    verificationFailed(context, exception);
-                                  },
-                                  codeSent: codeSent,
-                                  timeout: _timeOut,
-                                  codeAutoRetrievalTimeout:
-                                      codeAutoRetrievalTimeout,
-                                );
-                          }
-                        },
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                12.0,
+                    Center(
+                      child: Image.network(
+                        "https://firebasestorage.googleapis.com/v0/b/ksfood-a112c.appspot.com/o/assets%2F6593111.jpg?alt=media&token=4fb63464-2226-4fca-b1ec-0b8e20b30a7b",
+                        width: MediaQuery.of(context).size.width * 0.75,
+                      ),
+                    ),
+                    // Subtitle before OTP request
+                    Text(
+                      "We will send you a One-Time Password (OTP)\nto your phone number.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 32.0),
+
+                    // Phone Number
+                    TextFormField(
+                      maxLength: 12,
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      keyboardAppearance: Brightness.dark,
+                      inputFormatters: [
+                        PhoneNumberFormatter(),
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        counter: SizedBox.shrink(),
+                        isDense: true,
+                        labelText: "Phone Number",
+                        focusColor: Color(0xFF5DB329),
+                        floatingLabelStyle: TextStyle(color: Color(0xFF5DB329)),
+                        hintText: "0XX-XXX-XXXX",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                          borderSide: BorderSide(
+                              color: Colors.black12, style: BorderStyle.solid),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color(0xFF5DB329),
+                              width: 2.0), // Active border color
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    // Request OTP Button
+                    BlocBuilder<SigninCubit, SigninState>(
+                      builder: (_, state) {
+                        if (state.status == SigninStatus.submitting) {
+                          return const Center(
+                            child: CupertinoActivityIndicator(),
+                          );
+                        }
+                        return FilledButton(
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            LoadingScreen.instance().show(context: context);
+                            FocusScope.of(context).unfocus();
+                            if (_formKey.currentState!.validate()) {
+                              String phoneNumber =
+                                  _phoneController.value.text.trim();
+                              phoneNumber = phoneNumber.replaceAll("-", "");
+                              phoneNumber = "+66${phoneNumber.substring(1)}";
+                              developer.log(phoneNumber);
+                              context.read<SigninCubit>().verifyPhoneNumber(
+                                    phoneNumber: phoneNumber,
+                                    verificationFailed:
+                                        (FirebaseAuthException exception) {
+                                      verificationFailed(context, exception);
+                                    },
+                                    codeSent: codeSent,
+                                    timeout: _timeOut,
+                                    codeAutoRetrievalTimeout:
+                                        codeAutoRetrievalTimeout,
+                                  );
+                            }
+                          },
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
                               ),
                             ),
+                            backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF5DB329),
+                            ),
                           ),
-                        ),
-                        child: BlocBuilder<SigninCubit, SigninState>(
-                            builder: (context, state) {
-                          if (state.status == SigninStatus.submitting) {
-                            return const CupertinoActivityIndicator();
-                          }
-                          return const Text("Request OTP");
-                        }),
-                      );
-                    },
-                  ),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: BlocBuilder<SigninCubit, SigninState>(
+                                  builder: (context, state) {
+                                if (state.status == SigninStatus.submitting) {
+                                  return const CupertinoActivityIndicator();
+                                }
+                                return const Text("Request OTP");
+                              }),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
 
-                  const SizedBox(height: 16.0),
-                ],
+                    const SizedBox(height: 16.0),
+                  ],
+                ),
               ),
             ),
           ),

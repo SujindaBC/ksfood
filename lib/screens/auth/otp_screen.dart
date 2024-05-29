@@ -126,11 +126,14 @@ class _OTPScreenState extends State<OTPScreen> {
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                   ),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    const Color(0xFF5DB329),
+                                  ),
                                 ),
                                 onPressed: () async {
                                   FocusScope.of(context).unfocus();
-                                  LoadingScreen.instance().show(
-                                      context: context, text: "Signing in...");
+                                  LoadingScreen.instance()
+                                      .show(context: context);
                                   final PhoneAuthCredential
                                       phoneAuthCredential =
                                       PhoneAuthProvider.credential(

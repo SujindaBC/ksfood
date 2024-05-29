@@ -14,6 +14,10 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       emit(state.copyWith(selectedPaymentMethod: event.paymentMethod));
     });
 
+    on<ClearSelectedPayment>((event, emit) {
+      emit(state.copyWith(selectedPaymentMethod: null));
+    });
+
     on<ProcessPayment>((event, emit) async {
       try {
         final paymentSource = await createPaymentSource();
@@ -36,6 +40,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
                 status: PaymentStatus.successful,
               ),
             );
+            add(const ClearSelectedPayment());
             break;
           case "failed":
             // If payment fails

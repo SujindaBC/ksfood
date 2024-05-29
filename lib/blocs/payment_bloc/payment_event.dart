@@ -16,6 +16,10 @@ class SelectPaymentMethod extends PaymentEvent {
   List<Object> get props => [paymentMethod];
 }
 
+class ClearSelectedPayment extends PaymentEvent {
+  const ClearSelectedPayment();
+}
+
 class ProcessPayment extends PaymentEvent {
   const ProcessPayment();
 }

@@ -1,7 +1,7 @@
 enum PaymentMethod {
   // cashOnHand,
   promptPay,
-  mobileBankingKBank,
+  // mobileBankingKBank,
   // mobileBankingSCB,
 }
 
@@ -22,12 +22,12 @@ class PaymentModel {
 final Map<PaymentMethod, String> paymentMethodIcons = {
   // PaymentMethod.cash: Icons.money,
   PaymentMethod.promptPay: "lib/images/promptpay.png",
-  PaymentMethod.mobileBankingKBank: "lib/images/kbank.png",
+  // PaymentMethod.mobileBankingKBank: "lib/images/kbank.png",
   // PaymentMethod.mobileBankingSCB: "lib/images/scb.png"
   // Add more payment methods and their icons here
 };
 
 final Map<PaymentMethod, double> paymentFees = {
   PaymentMethod.promptPay: 1.65,
-  PaymentMethod.mobileBankingKBank: 10,
+  // PaymentMethod.mobileBankingKBank: 10,
 };
