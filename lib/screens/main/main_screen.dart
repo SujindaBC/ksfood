@@ -85,8 +85,6 @@ class MainScreen extends StatelessWidget {
                 return const SizedBox();
               } else {
                 return FloatingActionButton(
-                  backgroundColor: Colors.white.withAlpha(175),
-                  elevation: 0,
                   onPressed: () {},
                   child: const AppBarActionCartButton(),
                 );

@@ -32,7 +32,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
       child: Scaffold(
         appBar: AppBar(
           actions: const [
-            AppBarActionCartButton(),
+            // AppBarActionCartButton(),
           ],
         ),
         body: SingleChildScrollView(
@@ -122,6 +122,8 @@ class _MerchantScreenState extends State<MerchantScreen> {
               return const SizedBox();
             } else {
               return FloatingActionButton(
+                backgroundColor: Colors.white,
+                elevation: 1,
                 onPressed: () {},
                 child: const AppBarActionCartButton(),
               );

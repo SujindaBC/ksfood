@@ -4,60 +4,67 @@ const admin = require("firebase-admin");
 const dotenv = require("dotenv");
 dotenv.config();
 
-// Initialize Firestore
 admin.initializeApp();
 const db = admin.firestore();
 
 exports.webhook = functions.https.onRequest(async (req, res) => {
-  console.log(req.body);
-  try {
-    const event = req.body;
-    if (event.key === "charge.create" || event.key === "charge.complete") {
-      const charge = event.data;
-      const chargeId = charge.id;
-      const status = charge.status;
-      const amount = charge.amount;
-      const currency = charge.currency;
-      const paidAt = charge.paid_at;
-      const userId = charge.metadata.userId;
-      const cartItems = JSON.parse(charge.metadata.cartItems);
-      const merchantLocation = JSON.parse(charge.metadata.merchantLocation);
-      const deliveryLocation = JSON.parse(charge.metadata.deliveryLocation);
+  const event = req.body;
+  console.log("Received event:", JSON.stringify(event));
 
+  const chargeId = event.data && event.data.id;
+
+  if (!chargeId || typeof chargeId !== "string" || chargeId.trim() === "") {
+    console.error("Invalid chargeId:", chargeId);
+    return res.status(400).send("Invalid chargeId.");
+  }
+
+  const metadata = event.data.metadata || {};
+  const orderId = metadata.order_id;
+  const userId = metadata.user_id;
+  const status = event.data.status || metadata.status;
+
+  if (event.key === "charge.create") {
+    try {
       await db.collection("charges").doc(chargeId).set({
-        status: status,
-        amount: amount,
-        currency: currency,
-        paidAt: paidAt,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        ...event.data,
+        userId,
+        status,
       }, {merge: true});
 
-      if (status === "successful") {
-        const orderData = {
-          chargeId: chargeId,
-          amount: amount,
-          currency: currency,
-          paidAt: paidAt,
-          status: "waiting to process", // Initial order status
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          userId: userId, // Add userId to order
-          items: cartItems, // Add cart items to order
-          merchantLocation: merchantLocation, // Add merchant location to order
-          deliveryLocation: deliveryLocation, // Add delivery location to order
-          deliveryPartner: null, // Initial delivery partner details
-        };
-
-        const orderRef = await db.collection("orders").add(orderData);
-        console.log("Order created with ID:", orderRef.id);
+      // Update the order status
+      if (orderId) {
+        await db.collection("orders").doc(orderId).update({
+          status: "payment_processing",
+        }, {merge: true});
       }
 
-      res.status(200).send("Webhook processed successfully");
-    } else {
-      res.status(400).send("Event type not handled");
+      console.log(`Charge created with ID: ${chargeId}`);
+      res.status(200).send("Successfully responded.");
+    } catch (error) {
+      console.error("Error creating charge:", error);
+      res.status(500).send("Server error response.");
     }
-  } catch (error) {
-    console.error("Error processing webhook:", error);
-    res.status(500).send("Internal Server Error");
+  } else if (event.key === "charge.complete") {
+    try {
+      await db.collection("charges").doc(chargeId).set({
+        status: event.data.status,
+      }, {merge: true});
+
+      // Update the order status
+      if (orderId) {
+        await db.collection("orders").doc(orderId).update({
+          status: event.data.status === "successful" ? "completed" : "failed",
+        });
+      }
+
+      console.log(`Charge completed with ID: ${chargeId}`);
+      res.status(200).send("Successfully responded.");
+    } catch (error) {
+      console.error("Error completing charge:", error);
+      res.status(500).send("Server error response.");
+    }
+  } else {
+    console.log("Unhandled event key:", event.key);
+    res.status(400).send("Unhandled event key.");
   }
 });

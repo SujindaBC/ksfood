@@ -77,6 +77,7 @@ class ChargeBloc extends Bloc<ChargeEvent, ChargeState> {
       }
     });
   }
+  
   String paymentMethodString(PaymentMethod method) {
     switch (method) {
       case PaymentMethod.promptPay:

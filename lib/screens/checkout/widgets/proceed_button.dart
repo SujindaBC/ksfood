@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,36 +26,44 @@ class ProceedToPaymentButton extends StatelessWidget {
     required PaymentMethod paymentMethod,
     required Function(Map<String, dynamic>) onChargeCreated,
   }) async {
-    // Get current user ID
     final user = FirebaseAuth.instance.currentUser;
 
-    if (user == null) {
-      // Handle user not logged in
-      return "User not logged in";
-    }
+    if (user == null) return "User not logged in";
 
-    // Get selected cart and cart items
     final selectedCart = context.read<CartBloc>().state.selectedCart;
-    if (selectedCart == null) {
-      // Handle no selected cart
-      return "No cart selected";
-    }
+    if (selectedCart == null) return "No cart selected";
 
-    // final cartItems = selectedCart.items.map((item) {
-    //   return {
-    //     "id": item.product.id,
-    //     'name': item.product.name,
-    //     'quantity': item.quantity,
-    //     'price': item.product.price,
-    //   };
-    // }).toList();
+    final cartItems = selectedCart.items.map((item) {
+      return {
+        "id": item.product.id,
+        "name": item.product.name,
+        "quantity": item.quantity,
+        "price": item.product.price,
+      };
+    }).toList();
+
+    // Generate a unique order ID
+    final String orderId =
+        FirebaseFirestore.instance.collection("orders").doc().id;
+
+    // Store initial order details in Firestore
+    await FirebaseFirestore.instance.collection("orders").doc(orderId).set({
+      "userId": user.uid,
+      "merchantId": merchant.id,
+      "cartItems": cartItems,
+      "totalPrice": selectedCart.totalPrice,
+      "status": "created",
+      "createdAt": FieldValue.serverTimestamp(),
+    });
+
+    // TODO:: Don't use 'BuildContext's across async gaps.
 
     switch (paymentMethod) {
       case PaymentMethod.promptPay:
         try {
           final Uri url = Uri.parse("https://api.omise.co/charges");
           const String secreatKey = "skey_test_5nxdvpc87vwsrpu6zgo";
-          final String amount = (context.read<CartBloc>().state.totalPrice +
+          final String amount = (selectedCart.totalPrice +
                   context.read<CartBloc>().state.paymentFee(
                       context.read<PaymentBloc>().state.selectedPaymentMethod!))
               .toStringAsFixed(2);
@@ -69,14 +78,15 @@ class ProceedToPaymentButton extends StatelessWidget {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             body: {
-              "amount":
-                  "${(double.parse(amount) * 100).toInt()}", // Omise expects amount in the smallest currency unit
+              "amount": "${(double.parse(amount) * 100).toInt()}",
               "currency": "THB",
               "source[type]": paymentMethodString(paymentMethod),
               "expires_at": DateTime.now()
                   .toUtc()
                   .add(const Duration(minutes: 3))
                   .toIso8601String(),
+              "metadata[order_id]": orderId,
+              "metadata[user_id]": user.uid,
             },
           );
           if (response.statusCode == 200) {

@@ -49,7 +49,7 @@ void main() async {
       await Geolocator.requestPermission();
       break;
     case LocationPermission.whileInUse:
-      await Geolocator.requestPermission();
+      runApp(const MyApp());
       break;
     case LocationPermission.unableToDetermine:
       await Geolocator.requestPermission();
@@ -98,6 +98,14 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'KS Food',
           theme: ThemeData(
+            floatingActionButtonTheme: FloatingActionButtonThemeData(
+              backgroundColor: Colors.white.withAlpha(175),
+              elevation: 0,
+            ),
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.white.withAlpha(175),
+              surfaceTintColor: Colors.transparent,
+            ),
             appBarTheme: const AppBarTheme(
               foregroundColor: Colors.black,
               backgroundColor: Colors.transparent,

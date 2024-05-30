@@ -15,6 +15,10 @@ class AutomatedSlideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final deviceAspectRatio = screenHeight / (screenWidth * 0.76);
+
     return FutureBuilder<Position>(
       future: _determinePosition(),
       builder: (context, positionSnapshot) {
@@ -203,7 +207,7 @@ class AutomatedSlideCard extends StatelessWidget {
                     },
                   ),
                   options: CarouselOptions(
-                    height: 155,
+                    aspectRatio: deviceAspectRatio,
                     initialPage: 0,
                     padEnds: false,
                     viewportFraction: 0.4,
