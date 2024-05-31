@@ -19,6 +19,8 @@ class PaymentState extends Equatable {
   @override
   List<Object?> get props => [status, selectedPaymentMethod];
 
+  
+
   PaymentState copyWith({
     PaymentStatus? status,
     PaymentMethod? selectedPaymentMethod,

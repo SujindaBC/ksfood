@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/blocs/auth/signin_cubit/signin_cubit.dart';
 import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/blocs/charge_bloc/charge_bloc.dart';
 import 'package:ksfood/blocs/location_bloc/location_bloc.dart';
 import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
 import 'package:ksfood/firebase_options.dart';
@@ -90,6 +91,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<PaymentBloc>(
             create: (context) => PaymentBloc(),
+          ),
+          BlocProvider<ChargeBloc>(
+            create: (context) => ChargeBloc(
+              cartBloc: context.read<CartBloc>(),
+              paymentBloc: context.read<PaymentBloc>(),
+            ),
           ),
           BlocProvider<LocationBloc>(
             create: (context) => LocationBloc()..add(GetCurrentLocation()),

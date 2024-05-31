@@ -89,7 +89,7 @@ class PromptPayScreen extends StatelessWidget {
                         children: [
                           Center(
                             child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.7,
                               child: AspectRatio(
                                 aspectRatio: 4 / 6,
                                 child: InAppWebView(
@@ -108,21 +108,24 @@ class PromptPayScreen extends StatelessWidget {
                             expiresAt: expiresAtDateTime.toLocal(),
                             chargeId: chargeId,
                           ),
-                          Center(
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.file_download,
+                          SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.file_download,
+                                    ),
                                   ),
-                                ),
-                                const Text("Download QR")
-                              ],
+                                  const Text("Download QR")
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Text("Amount: $amount THB"),
+                          Text("Amount: ฿$amount"),
                           const SizedBox(height: 8),
                         ],
                       ),

@@ -8,14 +8,16 @@ abstract class ChargeEvent extends Equatable {
 }
 
 class CreateCharge extends ChargeEvent {
+  final BuildContext context;
+  final PaymentMethod paymentMethod;
+  final Merchant merchant;
+
   const CreateCharge({
-    required this.amount,
+    required this.context,
     required this.paymentMethod,
+    required this.merchant,
   });
 
-  final String amount;
-  final PaymentMethod paymentMethod;
-
   @override
-  List<Object> get props => [];
+  List<Object> get props => [context, paymentMethod, merchant];
 }

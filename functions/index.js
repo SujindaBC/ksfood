@@ -53,7 +53,8 @@ exports.webhook = functions.https.onRequest(async (req, res) => {
       // Update the order status
       if (orderId) {
         await db.collection("orders").doc(orderId).update({
-          status: event.data.status === "successful" ? "completed" : "failed",
+          // eslint-disable-next-line max-len
+          status: event.data.status === "successful" ? "paid" : "payment_failed",
         });
       }
 
