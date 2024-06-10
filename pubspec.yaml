@@ -57,6 +57,9 @@ dependencies:
   geolocator: ^9.0.2
   flutter_dotenv: ^5.1.0
   flutter_local_notifications: ^17.1.2
+  timelines: ^0.1.0
+  font_awesome_flutter: ^10.7.0
+  flutter_native_splash: ^2.3.7
 
 dev_dependencies:
   flutter_test:
@@ -86,7 +89,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - lib/images/
+    - lib/core/data/images/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -115,14 +118,14 @@ flutter:
   fonts:
     - family: Noto Sans Thai
       fonts:
-        - asset: lib/google_fonts/NotoSansThai-Black.ttf
-        - asset: lib/google_fonts/NotoSansThai-Bold.ttf
-        - asset: lib/google_fonts/NotoSansThai-ExtraBold.ttf
-        - asset: lib/google_fonts/NotoSansThai-ExtraLight.ttf
-        - asset: lib/google_fonts/NotoSansThai-Light.ttf
-        - asset: lib/google_fonts/NotoSansThai-Medium.ttf
-        - asset: lib/google_fonts/NotoSansThai-Regular.ttf
-        - asset: lib/google_fonts/NotoSansThai-SemiBold.ttf
-        - asset: lib/google_fonts/NotoSansThai-Thin.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-Black.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-Bold.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-ExtraBold.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-ExtraLight.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-Light.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-Medium.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-Regular.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-SemiBold.ttf
+        - asset: lib/core/google_fonts/NotoSansThai-Thin.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

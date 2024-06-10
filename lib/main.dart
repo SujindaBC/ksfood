@@ -1,26 +1,24 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ksfood/blocs/auth/auth_bloc/auth_bloc.dart';
-import 'package:ksfood/blocs/auth/signin_cubit/signin_cubit.dart';
-import 'package:ksfood/blocs/cart_bloc/cart_bloc.dart';
-import 'package:ksfood/blocs/charge_bloc/charge_bloc.dart';
-import 'package:ksfood/blocs/location_bloc/location_bloc.dart';
-import 'package:ksfood/blocs/payment_bloc/payment_bloc.dart';
+import 'package:ksfood/core/data/blocs/cart_bloc/cart_bloc.dart';
+import 'package:ksfood/core/data/blocs/charge_bloc/charge_bloc.dart';
+import 'package:ksfood/core/data/blocs/location_bloc/location_bloc.dart';
+import 'package:ksfood/core/data/blocs/payment_bloc/payment_bloc.dart';
+import 'package:ksfood/features/auth/data/repositories/authentication_repository_impl.dart';
+import 'package:ksfood/features/auth/presentation/blocs/auth_bloc/auth_bloc.dart';
+import 'package:ksfood/features/auth/presentation/blocs/signin_bloc/signin_bloc.dart';
+import 'package:ksfood/features/auth/presentation/pages/otp_screen.dart';
+import 'package:ksfood/features/auth/presentation/pages/phone_auth_screen.dart';
 import 'package:ksfood/firebase_options.dart';
-import 'package:ksfood/repositories/auth_repository.dart';
-import 'package:ksfood/screens/auth/auth_gate.dart';
-import 'package:ksfood/screens/auth/otp_screen.dart';
-import 'package:ksfood/screens/auth/phone_auth_screen.dart';
-import 'package:ksfood/screens/cart/cart_screen.dart';
-import 'package:ksfood/screens/checkout/checkout_screen.dart';
-import 'package:ksfood/screens/main/main_screen.dart';
-import 'package:ksfood/screens/merchant/merchant_screen.dart';
-import 'package:ksfood/screens/product/product_screen.dart';
-import 'package:ksfood/screens/promptpay/promptpay_screen.dart';
+import 'package:ksfood/core/presentation/screens/cart/cart_screen.dart';
+import 'package:ksfood/core/presentation/screens/checkout/checkout_screen.dart';
+import 'package:ksfood/core/presentation/screens/main/main_screen.dart';
+import 'package:ksfood/features/merchant/presentation/pages/merchant_screen.dart';
+import 'package:ksfood/core/presentation/screens/product/product_screen.dart';
+import 'package:ksfood/core/presentation/screens/promptpay/promptpay_screen.dart';
 
 void main() async {
   // Ensure initialization is complete before running app.
@@ -68,22 +66,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<AuthRepository>(
-          create: (BuildContext context) => AuthRepository(
-            firebaseAuth: FirebaseAuth.instance,
-          ),
+        RepositoryProvider<AuthenticationRepositoryImplementation>(
+          create: (BuildContext context) =>
+              AuthenticationRepositoryImplementation(),
         ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(
             create: (BuildContext context) => AuthBloc(
-              authRepository: context.read<AuthRepository>(),
+              authRepository: context.read<AuthenticationRepositoryImplementation>(),
             ),
           ),
           BlocProvider(
-            create: (context) => SigninCubit(
-              authRepository: context.read<AuthRepository>(),
+            create: (context) => SigninBloc(
+              authenticationRepositoryImplementation:
+                  context.read<AuthenticationRepositoryImplementation>(),
             ),
           ),
           BlocProvider<CartBloc>(
@@ -126,19 +124,21 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          initialRoute: AuthGateScreen.routeName,
+          initialRoute: PhoneAuthScreen.routeName,
           routes: {
-            AuthGateScreen.routeName: (context) => const AuthGateScreen(),
             PhoneAuthScreen.routeName: (BuildContext context) =>
                 const PhoneAuthScreen(),
             OTPScreen.routeName: (BuildContext context) => const OTPScreen(),
             MainScreen.routeName: (BuildContext context) => const MainScreen(),
             MerchantScreen.routeName: (BuildContext context) =>
                 const MerchantScreen(),
-            ProductScreen.routeName: (context) => const ProductScreen(),
-            CartScreen.routeName: (context) => const CartScreen(),
-            CheckoutScreen.routeName: (context) => const CheckoutScreen(),
-            PromptPayScreen.routeName: (context) => const PromptPayScreen(),
+            ProductScreen.routeName: (BuildContext context) =>
+                const ProductScreen(),
+            CartScreen.routeName: (BuildContext context) => const CartScreen(),
+            CheckoutScreen.routeName: (BuildContext context) =>
+                const CheckoutScreen(),
+            PromptPayScreen.routeName: (BuildContext context) =>
+                const PromptPayScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),
