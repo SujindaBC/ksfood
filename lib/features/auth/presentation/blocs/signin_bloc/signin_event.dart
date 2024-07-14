@@ -9,6 +9,7 @@ sealed class SigninEvent extends Equatable {
 
 class VerifyPhoneNumber extends SigninEvent {
   const VerifyPhoneNumber({
+    required this.context,
     required this.phoneNumber,
     required this.verificationFailed,
     required this.codeSent,
@@ -16,6 +17,7 @@ class VerifyPhoneNumber extends SigninEvent {
     required this.codeAutoRetrievalTimeout,
   });
 
+  final BuildContext context;
   final String phoneNumber;
   final void Function(FirebaseAuthException verificationFailed)
       verificationFailed;
@@ -67,4 +69,19 @@ class CodeAutoRetrievalTimeout extends SigninEvent {
 
   @override
   List<Object> get props => [context, verificationId];
+}
+
+class VerifyOTP extends SigninEvent {
+  const VerifyOTP({
+    required this.context,
+    required this.verificationId,
+    required this.smsCode,
+  });
+
+  final BuildContext context;
+  final String verificationId;
+  final String smsCode;
+
+  @override
+  List<Object?> get props => [verificationId, smsCode];
 }

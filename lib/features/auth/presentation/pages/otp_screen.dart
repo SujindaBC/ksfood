@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ksfood/core/presentation/loading/loading_screen.dart';
@@ -59,129 +58,113 @@ class _OTPScreenState extends State<OTPScreen> {
               onWillPop: () async => false,
               child: SafeArea(
                 child: Scaffold(
-                    appBar: AppBar(
-                      leading: BackButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
                     body: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Title
-                              const Text(
-                                'Enter OTP',
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title
+                          const Text(
+                            'Enter OTP',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          
+                          // Subtitle
+                          const Text(
+                            "We have sent a One-Time Password (OTP) to your registered phone number.",
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+
+                          // OTP
+                          TextFormField(
+                            controller: _otpController,
+                            maxLength: 6,
+                            keyboardType: TextInputType.number,
+                            validator: (value) => value!.isEmpty
+                                ? 'Please enter the OTP sent to your phone number'
+                                : null,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                                borderSide: BorderSide(
+                                    color: Colors.black12,
+                                    style: BorderStyle.solid),
+                              ),
+                              counter: SizedBox.shrink(),
+                              isDense: true,
+                              labelText: "OTP",
+                              hintText: "XXXXXX",
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+
+                          // Submit Button
+                          FilledButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                               ),
-                              const SizedBox(height: 16.0),
-                              // Subtitle
+                              backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF5DB329),
+                              ),
+                            ),
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                FocusScope.of(context).unfocus();
+                                LoadingScreen.instance().show(context: context);
+                                context.read<SigninBloc>().add(
+                                      VerifyOTP(
+                                        context: context,
+                                        verificationId: verificationId,
+                                        smsCode: _otpController.text.trim(),
+                                      ),
+                                    );
+                              }
+                            },
+                            child: const SizedBox(
+                              width: double.infinity,
+                              child: Center(
+                                child: Text('Submit'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          // Countdown Timer
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                               const Text(
-                                "We have sent a One-Time Password (OTP) to your registered phone number.",
+                                "Time remaining: ",
                                 style: TextStyle(
                                   fontSize: 16.0,
                                 ),
                               ),
-                              const SizedBox(height: 16.0),
-
-                              // OTP
-                              TextFormField(
-                                controller: _otpController,
-                                maxLength: 6,
-                                keyboardType: TextInputType.number,
-                                validator: (value) => value!.isEmpty
-                                    ? 'Please enter the OTP sent to your phone number'
-                                    : null,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(12.0),
-                                    ),
-                                    borderSide: BorderSide(
-                                        color: Colors.black12,
-                                        style: BorderStyle.solid),
-                                  ),
-                                  counter: SizedBox.shrink(),
-                                  isDense: true,
-                                  labelText: "OTP",
-                                  hintText: "XXXXXX",
-                                ),
-                              ),
-                              const SizedBox(height: 16.0),
-
-                              // Submit Button
-                              FilledButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    const Color(0xFF5DB329),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    FocusScope.of(context).unfocus();
-                                    LoadingScreen.instance()
-                                        .show(context: context);
-                                    final PhoneAuthCredential
-                                        phoneAuthCredential =
-                                        PhoneAuthProvider.credential(
-                                      verificationId: verificationId,
-                                      smsCode: _otpController.value.text.trim(),
-                                    );
-                                    try {
-                                      final UserCredential credential =
-                                          await FirebaseAuth.instance
-                                              .signInWithCredential(
-                                        phoneAuthCredential,
-                                      );
-                                      log("User credential: ${credential.user?.uid}");
-                                    } on FirebaseAuthException catch (error) {
-                                      log(error.toString());
-                                    }
-                                  }
-                                },
-                                child: const SizedBox(
-                                  width: double.infinity,
-                                  child: Center(
-                                    child: Text('Submit'),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 16.0),
-                              // Countdown Timer
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "Time remaining: ",
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                  CountdownTimer(
-                                    durationInSeconds: duration.inSeconds - 1,
-                                  ),
-                                ],
+                              CountdownTimer(
+                                durationInSeconds: duration.inSeconds - 1,
                               ),
                             ],
                           ),
-                        ),
+                        ],
                       ),
-                    )),
+                    ),
+                  ),
+                )),
               ),
             );
           },

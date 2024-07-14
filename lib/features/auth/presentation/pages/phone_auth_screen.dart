@@ -9,7 +9,6 @@ import 'package:ksfood/core/helpers/phonenumber_formatter.dart';
 import 'package:ksfood/features/auth/data/repositories/authentication_repository_impl.dart';
 import 'package:ksfood/features/auth/presentation/blocs/auth_bloc/auth_bloc.dart';
 import 'package:ksfood/features/auth/presentation/blocs/signin_bloc/signin_bloc.dart';
-import 'package:ksfood/core/presentation/loading/loading_screen.dart';
 import 'package:ksfood/core/presentation/screens/main/main_screen.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
@@ -76,13 +75,14 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        const SizedBox(height: 16.0),
 
                         // Subtitle before OTP request
                         Text(
                           "We will send you a One-Time Password (OTP)\nto your phone number.",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        const SizedBox(height: 8.0),
+                        const SizedBox(height: 16.0),
 
                         // Phone Number
                         TextFormField(
@@ -139,55 +139,58 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                             }
                             return FilledButton(
                               onPressed: () {
-                                FocusScope.of(context).unfocus();
-                                if (_formKey.currentState!.validate()) {
-                                  LoadingScreen.instance()
-                                      .show(context: context);
-                                  String phoneNumber =
-                                      _phoneController.value.text.trim();
-                                  phoneNumber = phoneNumber.replaceAll("-", "");
-                                  phoneNumber =
-                                      "+66${phoneNumber.substring(1)}";
-                                  developer.log(phoneNumber);
-                                  context.read<SigninBloc>().add(
-                                        VerifyPhoneNumber(
-                                          phoneNumber: phoneNumber,
-                                          verificationFailed:
-                                              (FirebaseAuthException
-                                                  exception) {
-                                            context.read<SigninBloc>().add(
-                                                  VerificationFailed(
-                                                    context: context,
-                                                    exception: exception,
-                                                  ),
-                                                );
-                                          },
-                                          codeSent: (String verificationId,
-                                              int? forceResendingToken) {
-                                            context.read<SigninBloc>().add(
-                                                  CodeSent(
-                                                    context: context,
-                                                    verificationId:
-                                                        verificationId,
-                                                    timeout: _timeOut,
-                                                    phoneNumberTextEdittingController:
-                                                        _phoneController,
-                                                  ),
-                                                );
-                                          },
-                                          timeout: _timeOut,
-                                          codeAutoRetrievalTimeout:
-                                              (String verificationId) {
-                                            context.read<SigninBloc>().add(
-                                                  CodeAutoRetrievalTimeout(
-                                                    context: context,
-                                                    verificationId:
-                                                        verificationId,
-                                                  ),
-                                                );
-                                          },
-                                        ),
-                                      );
+                                if (state.status !=
+                                    SigninStateStatus.submitting) {
+                                  FocusScope.of(context).unfocus();
+                                  if (_formKey.currentState!.validate()) {
+                                    String phoneNumber =
+                                        _phoneController.value.text.trim();
+                                    phoneNumber =
+                                        phoneNumber.replaceAll("-", "");
+                                    phoneNumber =
+                                        "+66${phoneNumber.substring(1)}";
+                                    developer.log(phoneNumber);
+                                    context.read<SigninBloc>().add(
+                                          VerifyPhoneNumber(
+                                            context: context,
+                                            phoneNumber: phoneNumber,
+                                            verificationFailed:
+                                                (FirebaseAuthException
+                                                    exception) {
+                                              context.read<SigninBloc>().add(
+                                                    VerificationFailed(
+                                                      context: context,
+                                                      exception: exception,
+                                                    ),
+                                                  );
+                                            },
+                                            codeSent: (String verificationId,
+                                                int? forceResendingToken) {
+                                              context.read<SigninBloc>().add(
+                                                    CodeSent(
+                                                      context: context,
+                                                      verificationId:
+                                                          verificationId,
+                                                      timeout: _timeOut,
+                                                      phoneNumberTextEdittingController:
+                                                          _phoneController,
+                                                    ),
+                                                  );
+                                            },
+                                            timeout: _timeOut,
+                                            codeAutoRetrievalTimeout:
+                                                (String verificationId) {
+                                              context.read<SigninBloc>().add(
+                                                    CodeAutoRetrievalTimeout(
+                                                      context: context,
+                                                      verificationId:
+                                                          verificationId,
+                                                    ),
+                                                  );
+                                            },
+                                          ),
+                                        );
+                                  }
                                 }
                               },
                               style: ButtonStyle(

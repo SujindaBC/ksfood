@@ -53,7 +53,7 @@ void main() async {
     case LocationPermission.unableToDetermine:
       await Geolocator.requestPermission();
       break;
-    case LocationPermission.always:
+    case LocationPermission.always:          
       runApp(const MyApp());
       break;
   }
